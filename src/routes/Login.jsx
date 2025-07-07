@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import registerPoster from '../assets/images/register-poster.jpg'
 import beteweLogo from '../assets/icons/betewe-logo.png'
-import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { ClipLoader } from "react-spinners";
+import { toast } from 'react-toastify'
+import axios from 'axios';
 
 export default function Login() {
     const [loginData, setLoginData] = useState({
@@ -15,11 +18,13 @@ export default function Login() {
     })
     const [showPassword, setShowPassword] = useState(false)
     const [validEmail, setValidEmail] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     // const [validPassword, setValidPassword] = useState(false)
 
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
     const isEmailEmpty = loginData.email.trim() === '';
     const isPasswordEmpty = loginData.password.trim() === '';
+    const navigate = useNavigate()
     
     const handleChange = (e) => {
         const { value, name } = e.target
@@ -54,16 +59,68 @@ export default function Login() {
 
     }, [loginData])
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const login = async () => {
+        const response = await axios.post('http://localhost:3000/api/auth/login', {
+            email: loginData.email,
+            password: loginData.password
+        })
+
+        return response
     }
 
-    // console.log(loginData);
-    // console.log(`
-    //     email valid? ${validEmail}
-    //     password valid? ${validPassword}
-    // `);
-    
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        if (isEmailEmpty || isPasswordEmpty) {
+            // field akan dianggap touched jika user belum menyentuh field 
+            // tapi langsung klik "Masuk" 
+            setTouchedFields({
+                email: true,
+                password: true
+            });
+
+            toast.error('Formulir mengandung kesalahan atau tidak lengkap.', {
+                position: 'top-center',
+                autoClose: 2000
+            });
+
+            return
+        }
+
+        // Mulai loading
+        setIsLoading(true);
+
+        try {
+            const res = await login(); // kirim data
+
+            // ✅ Jika berhasil
+            toast.success('Login berhasil! 🎉', {
+                position: 'top-center',
+                autoClose: 2000
+            });
+
+            localStorage.setItem('TOKEN', res.data.token)
+            
+            // beri jeda sedikit sebelum redirect
+            setTimeout(() => {
+                navigate('/dashboard');
+            }, 1500);
+
+            console.log(res);
+        } catch (error) {
+            toast.error('Login gagal.', {
+                position: 'top-center',
+                autoClose: 2000
+            });
+            console.log(error);
+        } finally {
+            // Selesai loading (baik sukses maupun gagal)
+            // namun delay proses menghilangkan loading 500ms
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 1000)
+        }
+    }
 
     return (
         <section className='flex h-screen text-[#2C448C] bg-[#F2F2F2]'>
@@ -156,9 +213,17 @@ export default function Login() {
 
                     <button 
                         onClick={handleSubmit} 
-                        className='text-xl w-[445px] h-[50px] border rounded-[15px] font-bold text-white bg-[#2C448C]'
+                        className={`
+                            flex items-center justify-center space-x-4 text-xl w-[445px] h-[50px] border rounded-[15px] font-bold text-white 
+                            ${isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]'} 
+                        `}
                     >
-                        Masuk
+                        <ClipLoader
+                            color='white'
+                            size={20}
+                            loading={isLoading}
+                        />
+                        <span>Masuk</span>
                     </button>
                 </form>
                 

@@ -1,8 +1,11 @@
 import { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import registerPoster from '../assets/images/register-poster.jpg'
 import beteweLogo from '../assets/icons/betewe-logo.png'
 import { User, Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { ClipLoader } from "react-spinners";
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 export default function Register() {
     const [registerData, setRegisterData] = useState({
@@ -23,6 +26,7 @@ export default function Register() {
     const [validEmail, setValidEmail] = useState(false)
     const [validPassword, setValidPassword] = useState(false)
     const [validMatchPass, setValidMatchPass] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const usernameRegex = /^[a-zA-Z0-9][a-zA-Z0-9._]{2,49}$/ // minimal 3 karakter, max 50 | Boleh huruf, angka, underscore, dan titik | Tidak boleh diawali karakter spesial ( _ atau . )
     const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
@@ -31,6 +35,7 @@ export default function Register() {
     const isEmailEmpty = registerData.email.trim() === '';
     const isPasswordEmpty = registerData.password.trim() === '';
     const isConfirmedPasswordEmpty = registerData.confirmedPass.trim() === '';
+    const navigate = useNavigate();
     
     const handleChange = (e) => {
         const { value, name } = e.target
@@ -71,16 +76,58 @@ export default function Register() {
 
     }, [registerData])
 
-    const handleSubmit = (e) => {
-        e.preventDefault()
+    const register = async () => {
+        const response = await axios.post('http://localhost:3000/api/auth/register', {
+            username: registerData.userName,
+            email: registerData.email,
+            password: registerData.password
+        })
+
+        return response; // hanya kembalikan respons
     }
 
-    console.log(registerData);
-    console.log(`
-        username valid? ${validUserName}
-        email valid? ${validEmail}
-        password valid? ${validPassword}
-    `);
+    const handleSubmit = async (e) => {
+        e.preventDefault()
+
+        // Mulai loading
+        setIsLoading(true);
+
+        try {
+            const res = await register(); // kirim data
+
+            // ✅ Jika berhasil
+            toast.success('Registrasi berhasil! Silakan login 🎉', {
+                position: 'top-center',
+                autoClose: 2000
+            });
+
+            // beri jeda sedikit sebelum redirect
+            setTimeout(() => {
+                navigate('/login');
+            }, 1500);
+
+            console.log(res);
+        } catch (error) {
+            toast.error('Registrasi gagal.', {
+                position: 'top-center',
+                autoClose: 2000
+            });
+            console.log(error);
+        } finally {
+            // Selesai loading (baik sukses maupun gagal)
+            // namun delay proses menghilangkan loading 500ms
+            setTimeout(() => {
+                setIsLoading(false);
+            }, 1000)
+        }
+    }
+
+    // console.log(registerData);
+    // console.log(`
+    //     username valid? ${validUserName}
+    //     email valid? ${validEmail}
+    //     password valid? ${validPassword}
+    // `);
     
 
     return (
@@ -250,10 +297,20 @@ export default function Register() {
                         )}
                     </div>
                     <button 
+                        type='button'
                         onClick={handleSubmit} 
-                        className={`text-xl w-[445px] h-[50px] border rounded-[15px] font-bold text-white ${validUserName && validEmail && validPassword && validMatchPass ? 'bg-[#2C448C]' : 'bg-[#BCBCBC] cursor-not-allowed'}`}
+                        disabled={isLoading || !validUserName || !validEmail || !validPassword || !validMatchPass}
+                        className={`
+                            flex justify-center items-center space-x-4 text-xl w-[445px] h-[50px] border rounded-[15px] font-bold text-white 
+                            ${validUserName && validEmail && validPassword && validMatchPass ? isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]' : 'bg-[#BCBCBC] cursor-not-allowed'}
+                        `}
                     >
-                        Daftar
+                        <ClipLoader 
+                            color='white'
+                            size={20}
+                            loading={isLoading}
+                        />
+                        <span>Daftar</span>
                     </button>
                 </form>
                 
