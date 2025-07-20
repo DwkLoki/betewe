@@ -9,6 +9,7 @@ import Home from './routes/Home.jsx'
 import Register from './routes/Register.jsx'
 import Login from './routes/Login.jsx'
 import Dashboard from './routes/Dashboard.jsx'
+import ProtectedRoute from './routes/ProtectedRoute.jsx';
 
 const router = createBrowserRouter([
     {
@@ -21,15 +22,27 @@ const router = createBrowserRouter([
             },
             {
                 path: '/register',
-                element: <Register />
+                element: (
+                    <ProtectedRoute>
+                        <Register />
+                    </ProtectedRoute>
+                )
             },
             {
                 path: '/login',
-                element: <Login />
+                element: (
+                    <ProtectedRoute>
+                        <Login />
+                    </ProtectedRoute>
+                ) 
             },
             {
                 path: '/dashboard',
-                element: <Dashboard />
+                element: (
+                    <ProtectedRoute>
+                        <Dashboard />
+                    </ProtectedRoute>
+                )
             }
         ]
     }

@@ -11,25 +11,25 @@ export default function Home() {
     return (
         <section className='text-[#1A1A1A] bg-[#F2F2F2]'>
             <header>
-                {/* <NavBar /> */}
+                <NavBar />
             </header>
 
             <main>
-                <section className='flex items-center space-x-12 mx-20 py-10'>
-                    <img src={heroImg} alt="Hero Image 1" className=''/>
+                <section className='flex flex-col mx-6 sm:flex-row items-center sm:space-x-12 sm:mx-20 py-10'>
+                    <img src={heroImg} alt="Hero Image 1" className='hidden sm:block'/>
                     <div>
-                        <h1 className='text-4xl font-bold'>Bingung ngerjain tugas kuliah?</h1>
-                        <p className='text-xl pt-6 pb-8'>Tenang, Betewe siap membantu kamu mendapatkan informasi dan pembahasan sesuai topik perkuliahanmu!</p>
-                        <div className='flex items-center space-x-4 w-[415px] h-[55px] bg-white rounded-2xl pl-6 pr-2'>
+                        <h1 className='text-2xl sm:text-4xl font-bold'>Bingung ngerjain tugas kuliah?</h1>
+                        <p className='text-base pt-4 pb-6 sm:text-xl sm:pt-6 sm:pb-8'>Tenang, Betewe siap membantu kamu mendapatkan informasi dan pembahasan sesuai topik perkuliahanmu!</p>
+                        <div className='flex items-center space-x-4 w-full h-[44px] sm:w-[415px] sm:h-[55px] bg-white rounded-2xl pl-6 pr-2'>
                             <input type="text" placeholder='Cari jawaban dari pertanyaanmu' className='flex-1 outline-none'/>
-                            <button className='w-[30px] h-[30px] bg-[#84ACF8] rounded-full flex items-center justify-center'>
-                                <Search size={20} />
+                            <button className='w-[25px] h-[25px] sm:w-[30px] sm:h-[30px] bg-[#84ACF8] rounded-full flex items-center justify-center'>
+                                <Search className="w-4 h-4 sm:w-5 sm:h-5 text-white" />
                             </button>
                         </div>
                     </div>
                 </section>
 
-                {/* <section className='mx-20 pt-20'>
+                <section className='mx-20 pt-20'>
                     <h1 className='text-4xl font-bold text-center'>
                         Temukan jawaban dari segala <br />
                         <span className="relative inline-block pb-4">
@@ -60,9 +60,9 @@ export default function Home() {
                             <img src={contentImg3} alt="Gambar Konten Ketiga" />
                         </div>
                     </div>
-                </section> */}
+                </section>
 
-                {/* <section className='py-20'>
+                <section className='py-20'>
                     <h1 className='text-4xl font-bold text-center'>
                         <span className="relative inline-block pb-4 mb-12">
                             Baca pendapat mereka yuk!
@@ -70,9 +70,9 @@ export default function Home() {
                         </span>
                     </h1>
                     <TestiCarousel />
-                </section> */}
+                </section>
 
-                {/* <section className='flex items-end space-x-12 mx-20 pb-20'>
+                <section className='flex items-end space-x-12 mx-20 pb-20'>
                     <img src={newsLetterImg} alt="Gambar Newsletter" />
                     <div className='flex flex-col space-y-6'>
                         <h1 className='text-4xl font-bold'>Daftarkan e-mail kamu untuk mendapatkan info terbaru dari kami, GRATIS!</h1>
@@ -83,13 +83,13 @@ export default function Home() {
                             Kirim
                         </button>
                     </div>
-                </section> */}
+                </section>
             </main>
 
-            {/* <footer className='h-[150px] bg-[#2C448C] text-white flex flex-col justify-center items-center'>
+            <footer className='h-[150px] bg-[#2C448C] text-white flex flex-col justify-center items-center'>
                 <p>©2025 PT Betewe Apa ya. All Rights Reserved</p>
                 <p>Tentang Kami - Ketentuan Privasi - Berlanganan - FAQ - Hubungi Kami</p>
-            </footer> */}
+            </footer>
         </section>
     )
 }
