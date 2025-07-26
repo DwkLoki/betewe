@@ -1,11 +1,11 @@
 import navLogo from '../assets/icons/navbar-logo.svg'
 import notifIcon from '../assets/icons/notif-icon.svg'
-import profilePhoto from '../assets/images/avatar-testi1.png'
+// import profilePhoto from '../assets/images/avatar-testi1.png'
 import { useNavigate } from "react-router-dom";
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import { Search } from 'lucide-react';
 
-export default function AfterLoginNav() {
+export default function AfterLoginNav(props) {
     const navigate = useNavigate();
 
     const handleLogout = () => {
@@ -26,7 +26,7 @@ export default function AfterLoginNav() {
                 <img src={notifIcon} alt="notification icon" className='w-[40px] h-[40px] p-2' />
                 <Popover className="relative w-[40px] h-[40px]">
                     <PopoverButton>
-                        <img src={profilePhoto} alt="profile photo" />
+                        <img src={props.profileCapture} alt="profile photo" className="w-full h-full object-cover rounded-full" />
                     </PopoverButton>
                     <PopoverPanel anchor="bottom" className="flex flex-col space-y-2 bg-white shadow-lg mt-3 w-36 rounded-2xl px-4 pb-4 pt-3 z-30">
                         <a href="/analytics" className='font-roboto'>View Profile</a>
