@@ -108,6 +108,7 @@ export default function Dashboard() {
 
                 {/* modal tambah pertanyaan */}
                 <AddQuestionModal 
+                    categories={categories}
                     isOpen={isOpen}
                     closeModal={closeModal}
                 />
