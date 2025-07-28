@@ -1,5 +1,9 @@
-import { Description, Dialog, DialogPanel, DialogTitle } from '@headlessui/react'
+import { Dialog, DialogPanel } from '@headlessui/react'
 import { useState } from 'react'
+import { CircleAlert } from 'lucide-react';
+import { ClipLoader } from "react-spinners";
+import { toast } from 'react-toastify';
+import axios from 'axios';
 
 export default function AddQuestionModal(props) {
     // const [isOpen, setIsOpen] = useState(false)
@@ -7,12 +11,17 @@ export default function AddQuestionModal(props) {
         title: '',
         content: '',
         categoryQuery: '',
-        categories: []
+        // categories: []
     })
     // console.log(formData);
     // const [query, setQuery] = useState('')
     const [selectedTags, setSelectedTags] = useState([])
     const [filteredTags, setFilteredTags] = useState([])
+    const [isLoading, setIsLoading] = useState(false)
+
+    const isTitleEmpty = formData.title.trim() === '';
+    const isContentEmpty = formData.content.trim() === '';
+    const isSelectedTagsEmpty = selectedTags.length === 0;
 
     const handleInputChange = (e) => {
         const { value, name } = e.target
@@ -52,17 +61,65 @@ export default function AddQuestionModal(props) {
         setSelectedTags(selectedTags.filter(tag => tag.id !== id))
     }
 
-    const handleSubmit = (e) => {
+    const addQuestion = async () => {
+        const token = localStorage.getItem('TOKEN')
+        const question = {
+            title: formData.title,
+            content: formData.content,
+            category_ids: selectedTags.map(tag => tag.id) // convert ['ekonomi', 'bisnis'] => [7, 5]
+        }
+        const config = {
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+
+        const response = await axios.post('http://localhost:3000/api/questions', question, config)
+
+        return response;
+    }
+
+    const handleSubmit = async (e) => {
         // const tagIds = selectedTags.map(tag => tag.id)
         // console.log('Submit dengan tag ID:', tagIds)
         e.preventDefault()
-        const tagIds = selectedTags.map(tag => tag.id)
-        const finalData = {
-            ...formData,
-            categories: tagIds
+
+        // Mulai loading
+        setIsLoading(true);
+
+        try {
+            const res = await addQuestion()
+
+            // ✅ Jika berhasil
+            toast.success('Tambah pertanyaan berhasil! 🎉', {
+                position: 'top-center',
+                autoClose: 2000
+            });
+
+            // reset form
+            setFormData({
+                title: '',
+                content: '',
+                categoryQuery: '',
+            })
+            setSelectedTags([])
+            setFilteredTags([])
+
+            setTimeout(() => {
+                setIsLoading(false);
+                props.closeModal()
+            }, 1000)
+            console.log(res)
+        } catch (error) {
+            console.log(error)
         }
-        console.log(finalData)
-        props.closeModal()
+        // const tagIds = selectedTags.map(tag => tag.id)
+        // const finalData = {
+        //     ...formData,
+        //     categories: tagIds
+        // }
+        // console.log(finalData)
+        // props.closeModal()
     }
 
     return (
@@ -153,6 +210,11 @@ export default function AddQuestionModal(props) {
                                 </label>
                             </form>
 
+                            <div className='flex px-3 py-2 text-yellow-700 border-2 border-yellow-500 bg-yellow-400 rounded'>
+                                <CircleAlert strokeWidth={1.75}/>
+                                <span className='ml-4'>Lengkapi form di atas sebelum mengirim pertanyaan</span>
+                            </div>
+
                             <div className="flex justify-end gap-4">
                                 <button 
                                     type='button'
@@ -164,9 +226,18 @@ export default function AddQuestionModal(props) {
                                 <button
                                     type='button'
                                     onClick={handleSubmit}
-                                    className='px-4 py-2 rounded-[15px] font-bold text-white bg-[#2C448C]'
+                                    disabled={isLoading || isTitleEmpty || isContentEmpty || isSelectedTagsEmpty}
+                                    className={`
+                                        flex justify-center items-center space-x-4 px-4 py-2 rounded-[15px] font-bold text-white bg-[#2C448C]
+                                        ${!isTitleEmpty && !isContentEmpty && !isSelectedTagsEmpty ? isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]' : 'bg-[#BCBCBC] cursor-not-allowed'}
+                                    `}
                                 >
-                                    Kirim Pertanyaan
+                                    <ClipLoader 
+                                        color='white'
+                                        size={20}
+                                        loading={isLoading}
+                                    />
+                                    <span>Kirim Pertanyaan</span>
                                 </button>
                             </div>
                         </div>

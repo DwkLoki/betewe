@@ -115,7 +115,7 @@ export default function Register() {
             console.log(error);
         } finally {
             // Selesai loading (baik sukses maupun gagal)
-            // namun delay proses menghilangkan loading 500ms
+            // namun delay proses menghilangkan loading 1000ms
             setTimeout(() => {
                 setIsLoading(false);
             }, 1000)
