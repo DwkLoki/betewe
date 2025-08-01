@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
 import registerPoster from '../assets/images/register-poster.jpg'
 import beteweLogo from '../assets/icons/betewe-logo.png'
-import { Mail, Lock, Eye, EyeOff } from 'lucide-react';
+import { Mail, Lock, Eye, EyeOff, SquareArrowLeft } from 'lucide-react';
 import { ClipLoader } from "react-spinners";
 import { toast } from 'react-toastify'
 import axios from 'axios';
@@ -128,8 +128,14 @@ export default function Login() {
                 <img src={registerPoster} className='object-cover h-full w-full' alt="Register Page Poster" />
             </div>
             <div className='w-1/2 h-full py-4 pl-12 pr-6 overflow-auto'>
-                <div className='flex justify-end'>
-                    <img src={beteweLogo} className='w-20 h-20' alt="Betewe Logo" />
+                <div className='flex justify-between'>
+                    <Link to='/' className='flex items-center space-x-1'>
+                        <SquareArrowLeft color='#2C448C' size={20} />
+                        <p>Home</p>
+                    </Link>
+                    <Link to='/'>
+                        <img src={beteweLogo} className='w-20 h-20' alt="Betewe Logo" />
+                    </Link>
                 </div>
 
                 <h1 className='text-[2.25rem] font-bold'>Hai,</h1>

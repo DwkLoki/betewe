@@ -4,6 +4,7 @@ import notifIcon from '../assets/icons/notif-icon.svg'
 import { useNavigate } from "react-router-dom";
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import { Search } from 'lucide-react';
+import { Link } from 'react-router-dom'
 
 export default function AfterLoginNav(props) {
     const navigate = useNavigate();
@@ -15,7 +16,9 @@ export default function AfterLoginNav(props) {
 
     return (
         <nav className="flex items-center justify-between h-20 px-20">
-            <img src={navLogo} alt="Navbar Logo" />
+            <Link to='/dashboard'>
+                <img src={navLogo} alt="Navbar Logo" />
+            </Link>
             <div className='flex items-center space-x-6'>
                 <div className='flex items-center space-x-4 w-full h-[44px] sm:w-[340px] sm:h-[40px] bg-white rounded-2xl pl-6 pr-2'>
                     <input type="text" placeholder='Cari jawaban dari pertanyaanmu' className='flex-1 outline-none' />
@@ -29,7 +32,8 @@ export default function AfterLoginNav(props) {
                         <img src={props.profileCapture} alt="profile photo" className="w-full h-full object-cover rounded-full" />
                     </PopoverButton>
                     <PopoverPanel anchor="bottom" className="flex flex-col space-y-2 bg-white shadow-lg mt-3 w-36 rounded-2xl px-4 pb-4 pt-3 z-30">
-                        <a href="/analytics" className='font-roboto'>View Profile</a>
+                        <Link to='/profile' className='font-roboto'>View Profile</Link>
+                        {/* <a href="/analytics" className='font-roboto'>View Profile</a> */}
                         <button onClick={handleLogout} className='font-roboto text-left'>Logout</button>
                     </PopoverPanel>
                 </Popover>

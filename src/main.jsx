@@ -10,6 +10,9 @@ import Register from './routes/Register.jsx'
 import Login from './routes/Login.jsx'
 import Dashboard from './routes/Dashboard.jsx'
 import ProtectedRoute from './routes/ProtectedRoute.jsx';
+import Profile from './routes/Profile.jsx';
+import QuestionDetails from './routes/QuestionDetails.jsx';
+import QuestionLayout from './routes/QuestionLayout.jsx';
 
 const router = createBrowserRouter([
     {
@@ -43,6 +46,24 @@ const router = createBrowserRouter([
                         <Dashboard />
                     </ProtectedRoute>
                 )
+            },
+            {
+                path: '/profile',
+                element: (
+                    <ProtectedRoute>
+                        <Profile />
+                    </ProtectedRoute>
+                )
+            },
+            {
+                path: '/question',
+                element: <QuestionLayout />,
+                children: [
+                    {
+                        path: ':id',
+                        element: <QuestionDetails />
+                    }
+                ]
             }
         ]
     }

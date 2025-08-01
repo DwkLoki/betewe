@@ -15,11 +15,11 @@ export default function Dashboard() {
     // const openModal = () => setIsOpen(true)
     const closeModal = () => setIsOpen(false)
 
-    const handleSubmitQuestion = (data) => {
-        console.log('submit pertanyaan');
-        // console.log('Pertanyaan baru:', data)
-        // Lanjutkan simpan ke backend atau state lokal
-    }
+    // const handleSubmitQuestion = (data) => {
+    //     console.log('submit pertanyaan');
+    //     // console.log('Pertanyaan baru:', data)
+    //     // Lanjutkan simpan ke backend atau state lokal
+    // }
 
     useEffect(() => {
         getMe()
