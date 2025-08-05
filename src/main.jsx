@@ -3,7 +3,7 @@ import { createRoot } from 'react-dom/client'
 import './index.css'
 import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import { ToastContainer } from 'react-toastify';
-
+import { Navigate } from 'react-router-dom';
 import Root from './routes/Root.jsx'
 import Home from './routes/Home.jsx'
 import Register from './routes/Register.jsx'
@@ -13,6 +13,9 @@ import ProtectedRoute from './routes/ProtectedRoute.jsx';
 import Profile from './routes/Profile.jsx';
 import QuestionDetails from './routes/QuestionDetails.jsx';
 import QuestionLayout from './routes/QuestionLayout.jsx';
+import EditProfile from './routes/EditProfile.jsx';
+import ChangePassword from './routes/ChangePassword.jsx';
+import ProfileSetting from './routes/ProfileSetting.jsx';
 
 const router = createBrowserRouter([
     {
@@ -54,6 +57,36 @@ const router = createBrowserRouter([
                         <Profile />
                     </ProtectedRoute>
                 )
+            },
+            {
+                path: '/profile/setting',
+                element: (
+                    <ProtectedRoute>
+                        <ProfileSetting />
+                    </ProtectedRoute>
+                ), 
+                children: [
+                    {
+                        index: true,
+                        element: <Navigate to="edit-profile" replace />
+                    },
+                    {
+                        path: 'edit-profile',
+                        element: (
+                            <ProtectedRoute>
+                                <EditProfile />
+                            </ProtectedRoute>
+                        )
+                    },
+                    {
+                        path: 'change-password',
+                        element: (
+                            <ProtectedRoute>
+                                <ChangePassword />
+                            </ProtectedRoute>
+                        )
+                    }
+                ]
             },
             {
                 path: '/question',

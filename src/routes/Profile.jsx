@@ -81,7 +81,7 @@ export default function Profile() {
 
             <main className="flex ml-[400px] pt-24 h-screen">
                 <aside className="fixed flex flex-col space-y-6 top-20 left-0 w-[390px] h-[calc(100vh-80px)] bg-white border-r z-10 p-6 overflow-y-auto">
-                    <Link className='relative group flex justify-end' >
+                    <Link to='/profile/setting' className='relative group flex justify-end' >
                         <Pencil color="#2C448C" size={20} strokeWidth={1.75}/>
                         <span className="absolute top-full mt-3 hidden group-hover:block bg-[#2C448C] text-white text-xs px-2 py-1 rounded">
                             Edit Profil
@@ -185,7 +185,7 @@ export default function Profile() {
                                         </div>
 
                                         {/* bagian pertanyaan dan jawaban */}
-                                        <div className='flex-1'>
+                                        <div className='flex-1 space-y-3'>
                                             <Link to={`/question/${answer.Question.id}`} className='text-2xl font-bold hover:text-[#2C448C]'>
                                                 {answer.Question.title}
                                             </Link>
