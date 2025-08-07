@@ -11,6 +11,12 @@ export default function ProfileSetting() {
         getMe(); // hanya ambil user dulu
     }, []);
 
+    // useEffect(() => {
+    //     if (user) {
+    //         getMe(); // hanya jalan saat user sudah siap
+    //     }
+    // }, [user]);
+
     const getMe = async () => {
         try {
             const token = localStorage.getItem("TOKEN");
@@ -29,7 +35,15 @@ export default function ProfileSetting() {
     return (
         <section className="font-roboto h-screen overflow-hidden">
             <header className="fixed top-0 left-0 right-0 z-20 bg-[#F2F2F2] shadow">
-                <AfterLoginNav profileCapture={user?.foto_profil}/>
+                <AfterLoginNav 
+                    profileCapture={
+                        user?.foto_profil
+                        ? user.foto_profil.startsWith('http')
+                            ? user.foto_profil
+                            : `http://localhost:3000${user.foto_profil}`
+                        : '/default-avatar.png'
+                    }
+                />
             </header>
 
             <main className="flex fixed top-20 h-[calc(100vh-80px)] w-full px-32 py-10">
@@ -60,7 +74,7 @@ export default function ProfileSetting() {
                 </nav>
 
                 <div className="flex-1 px-20 overflow-y-auto">
-                    <Outlet context={user}/>
+                    <Outlet context={{ user, refreshUser: getMe }}/>
                 </div>
             </main>
         </section>

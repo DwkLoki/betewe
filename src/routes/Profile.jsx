@@ -76,7 +76,13 @@ export default function Profile() {
     return (
         <section className="h-screen overflow-hidden">
             <header className="fixed top-0 left-0 right-0 z-20 bg-[#F2F2F2] shadow">
-                <AfterLoginNav profileCapture={user?.foto_profil}/>
+                <AfterLoginNav 
+                    profileCapture={user?.foto_profil
+                    ? user.foto_profil.startsWith('http')
+                        ? user.foto_profil
+                        : `http://localhost:3000${user.foto_profil}`
+                    : '/default-avatar.png'} 
+                />
             </header>
 
             <main className="flex ml-[400px] pt-24 h-screen">
@@ -88,24 +94,34 @@ export default function Profile() {
                         </span>
                     </Link>
                     <div className="flex justify-center">
-                        <img src={user?.foto_profil} alt="profile photo" className="rounded-full w-28 text-center"/>
+                        <img 
+                            src={
+                                user?.foto_profil
+                                ? user.foto_profil.startsWith('http')
+                                    ? user.foto_profil
+                                    : `http://localhost:3000${user.foto_profil}`
+                                : '/default-avatar.png'
+                            } 
+                            alt="profile photo" 
+                            className="rounded-full w-28 h-28 object-cover text-center"
+                        />
                     </div>
                     <div className='flex flex-col space-y-2'>
-                        <div className="flex justify-between">
-                            <p className="text-[#BCBCBC] w-80">Nama Pengguna</p>
-                            <p className="text-end">{user?.username}</p>
+                        <div className="flex">
+                            <p className="text-[#BCBCBC] w-2/5">Nama Pengguna</p>
+                            <p className="text-end flex-1">{user?.username}</p>
                         </div>
-                        <div className="flex justify-between">
-                            <p className="text-[#BCBCBC] w-80">Email</p>
-                            <p className="text-end">{user?.email}</p>
+                        <div className="flex">
+                            <p className="text-[#BCBCBC] w-2/5">Email</p>
+                            <p className="text-end flex-1">{user?.email}</p>
                         </div>
-                        <div className="flex justify-between">
-                            <p className="text-[#BCBCBC] w-80">Nama Lengkap</p>
-                            <p className="text-end">{user?.nama_lengkap ? user.nama_lengkap : '-'}</p>
+                        <div className="flex">
+                            <p className="text-[#BCBCBC] w-2/5">Nama Lengkap</p>
+                            <p className="text-end flex-1">{user?.nama_lengkap ? user.nama_lengkap : '-'}</p>
                         </div>
-                        <div className="flex justify-between">
-                            <p className="text-[#BCBCBC] w-80">Jurusan</p>
-                            <p className="text-end">{user?.jurusan ? user.jurusan : '-'}</p>
+                        <div className="flex">
+                            <p className="text-[#BCBCBC] w-2/5">Jurusan</p>
+                            <p className="text-end flex-1">{user?.jurusan ? user.jurusan : '-'}</p>
                         </div>
                     </div>
                     {/* <button 
@@ -168,7 +184,17 @@ export default function Profile() {
                             : answers.map(answer => (
                                 <div className='w-full border-b py-4'>
                                     <header className='flex w-full space-x-4 items-center'>
-                                        <img src={answer.User.foto_profil} alt="profile photo" className='w-[55px] h-[55px] rounded-full' />
+                                        <img 
+                                            src={
+                                                answer.User?.foto_profil
+                                                ? answer.User.foto_profil.startsWith('http')
+                                                    ? answer.User.foto_profil
+                                                    : `http://localhost:3000${answer.User.foto_profil}`
+                                                : '/default-avatar.png'
+                                            } 
+                                            alt="profile photo" 
+                                            className='w-[55px] h-[55px] rounded-full object-cover' 
+                                        />
                                         <div className='flex-1'>
                                             <p className='font-bold mb-1 text-[#2C448C]'>{answer.User.nama_lengkap || answer.User.username}</p>
                                             <p className='text-xs text-[#84ACF8]'>{answer.User.jurusan || ''}</p>

@@ -6,18 +6,105 @@ import { formatDistanceToNow } from 'date-fns'
 import { id } from 'date-fns/locale'  // opsional kalau mau bahasa Indonesia
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
+import { toast } from 'react-toastify';
 import AddAnswerModal from './AddAnswerModal'
+import axios from 'axios'
 
 export default function Question(props) {  
     const [isOpen, setIsOpen] = useState(false)
 
     const closeModal = () => setIsOpen(false)
-    console.log(props);
+    // console.log(props);
+
+    const upvote = async () => {
+        try {
+            const token = localStorage.getItem('TOKEN')
+            const response = await axios.post(`http://localhost:3000/api/questions/${props.data.id}/upvote`, null, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+            toast.success('Upvoted berhasil!', {
+                position: 'top-center',
+                autoClose: 2000
+            })
+
+            console.log(response);
+        } catch (error) {
+            // Handle error responses
+            if (error.response?.status === 400) {
+                toast.error('Kamu sudah memberikan upvote pada pertanyaan ini.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else if (error.response?.status === 401) {
+                toast.error('Silakan login terlebih dahulu untuk memberikan vote.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else {
+                toast.error('Terjadi kesalahan. Silakan coba lagi nanti.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            }
+            console.log(error);
+        }
+    }
+
+    const downvote = async () => {
+        try {
+            const token = localStorage.getItem('TOKEN')
+            const response = await axios.post(`http://localhost:3000/api/questions/${props.data.id}/downvote`, null, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+            toast.success('Downvoted berhasil!', {
+                position: 'top-center',
+                autoClose: 2000
+            })
+
+            console.log(response);
+        } catch (error) {
+            // Handle error responses
+            if (error.response?.status === 400) {
+                toast.error('Kamu sudah memberikan downvote pada pertanyaan ini.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else if (error.response?.status === 401) {
+                toast.error('Silakan login terlebih dahulu untuk memberikan vote.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else {
+                toast.error('Terjadi kesalahan. Silakan coba lagi nanti.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            }
+            console.log(error);
+        }
+    }
      
     return (
         <div className='w-[626px]'>
             <header className='flex w-full space-x-4 items-center'>
-                <img src={props.data.User.foto_profil} alt="profile photo" className='w-[55px] h-[55px] rounded-full' />
+                <img 
+                    // src={props.data.User.foto_profil} 
+                    src={
+                        props.data.User?.foto_profil
+                        ? props.data.User.foto_profil.startsWith('http')
+                            ? props.data.User.foto_profil
+                            : `http://localhost:3000${props.data.User.foto_profil}`
+                        : '/default-avatar.png'
+                    }
+                    alt="profile photo" 
+                    className='w-[55px] h-[55px] rounded-full object-cover' 
+                />
                 <div className='flex-1'>
                     <p className='font-bold mb-1 text-[#2C448C]'>{props.data.User.nama_lengkap || props.data.User.username}</p>
                     <p className='text-xs text-[#84ACF8]'>{props.data.User.jurusan || ''}</p>
@@ -28,9 +115,13 @@ export default function Question(props) {
             <main className='flex w-full space-x-4 mt-6'>
                 {/* bagian untuk vote */}
                 <div className='w-[55px] flex flex-col px-4 py-2 space-y-4 items-center'>
-                    <img src={upvoteIcon} alt="upvote icon" />
+                    <button onClick={upvote}>
+                        <img src={upvoteIcon} alt="upvote icon" />
+                    </button>
                     <span>{props.data.vote}</span>
-                    <img src={downvoteIcon} alt="upvote icon" />
+                    <button onClick={downvote}>
+                        <img src={downvoteIcon} alt="downvote icon" />
+                    </button>
                 </div>
 
                 {/* bagian pertanyaan */}

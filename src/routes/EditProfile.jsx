@@ -322,7 +322,7 @@ import { toast } from 'react-toastify';
 import axios from 'axios';
 
 export default function EditProfile() {
-    const user = useOutletContext()
+    const { user, refreshUser } = useOutletContext()
     const fileInputRef = useRef(null);
     const [profileData, setProfileData] = useState({
         username: '',
@@ -452,10 +452,19 @@ export default function EditProfile() {
                 foto_profil: res.data.foto_profil
             }));
 
-            toast.success('Foto profil berhasil diperbarui');
+            // refresh user
+            await refreshUser();
+
+            toast.success('Foto profil berhasil diperbarui! 🎉', {
+                position: 'top-center',
+                autoClose: 2000
+            });
         } catch (err) {
             console.error("Gagal upload foto:", err);
-            toast.error(err.response?.data?.error || 'Gagal upload foto');
+            toast.error(err.response?.data?.error || 'Gagal upload foto', {
+                position: 'top-center',
+                autoClose: 2000
+            });
         } finally {
             setIsUploading(false); // Selesai loading upload
         }

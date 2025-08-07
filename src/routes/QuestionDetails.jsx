@@ -5,6 +5,7 @@ import upvoteIcon from '../assets/icons/upvote.svg'
 import downvoteIcon from '../assets/icons/downvote.svg'
 import { formatDistanceToNow } from 'date-fns'
 import { id } from 'date-fns/locale'  // opsional kalau mau bahasa Indonesia
+import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom'
 import AfterLoginNav from '../components/AfterLoginNav'
 import axios from 'axios'
@@ -47,19 +48,197 @@ export default function QuestionDetails() {
             console.log(err);
         }
     }
+
+    const upvoteQuestion = async () => {
+        try {
+            const token = localStorage.getItem('TOKEN')
+            const response = await axios.post(`http://localhost:3000/api/questions/${questionId.id}/upvote`, null, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+            toast.success('Upvoted berhasil!', {
+                position: 'top-center',
+                autoClose: 2000
+            })
+
+            // ✅ Refresh data setelah vote
+            getQuestionDetail()
+
+            console.log(response);
+        } catch (error) {
+            // Handle error responses
+            if (error.response?.status === 400) {
+                toast.error('Kamu sudah memberikan upvote pada pertanyaan ini.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else if (error.response?.status === 401) {
+                toast.error('Silakan login terlebih dahulu untuk memberikan vote.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else {
+                toast.error('Terjadi kesalahan. Silakan coba lagi nanti.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            }
+            console.log(error);
+        }
+    }
+
+    const downvoteQuestion = async () => {
+        try {
+            const token = localStorage.getItem('TOKEN')
+            const response = await axios.post(`http://localhost:3000/api/questions/${questionId.id}/downvote`, null, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+            toast.success('Downvoted berhasil!', {
+                position: 'top-center',
+                autoClose: 2000
+            })
+
+            // ✅ Refresh data setelah vote
+            getQuestionDetail()
+
+            console.log(response);
+        } catch (error) {
+            // Handle error responses
+            if (error.response?.status === 400) {
+                toast.error('Kamu sudah memberikan downvote pada pertanyaan ini.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else if (error.response?.status === 401) {
+                toast.error('Silakan login terlebih dahulu untuk memberikan vote.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else {
+                toast.error('Terjadi kesalahan. Silakan coba lagi nanti.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            }
+            console.log(error);
+        }
+    }
+
+    const upvoteAnswer = async (answerId) => {
+        try {
+            const token = localStorage.getItem('TOKEN')
+            const response = await axios.post(`http://localhost:3000/api/answers/${answerId}/upvote`, null, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+            toast.success('Upvoted berhasil!', {
+                position: 'top-center',
+                autoClose: 2000
+            })
+
+            // ✅ Refresh data setelah vote
+            getQuestionDetail()
+
+            console.log(response);
+        } catch (error) {
+            // Handle error responses
+            if (error.response?.status === 400) {
+                toast.error('Kamu sudah memberikan upvote pada jawaban ini.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else if (error.response?.status === 401) {
+                toast.error('Silakan login terlebih dahulu untuk memberikan vote.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else {
+                toast.error('Terjadi kesalahan. Silakan coba lagi nanti.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            }
+            console.log(error);
+        }
+    }
+
+    const downvoteAnswer = async (answerId) => {
+        try {
+            const token = localStorage.getItem('TOKEN')
+            const response = await axios.post(`http://localhost:3000/api/answers/${answerId}/downvote`, null, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+            toast.success('Downvoted berhasil!', {
+                position: 'top-center',
+                autoClose: 2000
+            })
+
+            // ✅ Refresh data setelah vote
+            getQuestionDetail()
+
+            console.log(response);
+        } catch (error) {
+            // Handle error responses
+            if (error.response?.status === 400) {
+                toast.error('Kamu sudah memberikan downvote pada jawaban ini.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else if (error.response?.status === 401) {
+                toast.error('Silakan login terlebih dahulu untuk memberikan vote.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else {
+                toast.error('Terjadi kesalahan. Silakan coba lagi nanti.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            }
+            console.log(error);
+        }
+    }
     
     console.log(questionDetail)
 
     return (
         <section>
             <header className="fixed top-0 left-0 right-0 z-20 bg-[#F2F2F2] shadow">
-                <AfterLoginNav profileCapture={user?.foto_profil}/>
+                <AfterLoginNav 
+                    profileCapture={
+                        user?.foto_profil
+                        ? user?.foto_profil.startsWith('http')
+                            ? user?.foto_profil
+                            : `http://localhost:3000${user?.foto_profil}`
+                        : '/default-avatar.png'
+                    }
+                />
             </header>
 
             <main className='flex flex-col fixed top-20 pt-8 items-center w-full h-[calc(100vh-80px)] overflow-y-auto'>
                 <div className='w-[626px] pb-4 border-b-2'>
                     <header className='flex w-full space-x-4 items-center'>
-                        <img src={questionDetail.User?.foto_profil} alt="profile photo" className='w-[55px] h-[55px] rounded-full' />
+                        <img 
+                            src={
+                                questionDetail.User?.foto_profil
+                                ? questionDetail.User.foto_profil.startsWith('http')
+                                    ? questionDetail.User.foto_profil
+                                    : `http://localhost:3000${questionDetail.User.foto_profil}`
+                                : '/default-avatar.png'
+                            }
+                            alt="profile photo"
+                            className='w-[55px] h-[55px] rounded-full object-cover' 
+                        />
                         <div className='flex-1'>
                             <p className='font-bold mb-1 text-[#2C448C]'>{questionDetail.User?.nama_lengkap || questionDetail.User?.username}</p>
                             <p className='text-xs text-[#84ACF8]'>{questionDetail.User?.jurusan || ''}</p>
@@ -68,11 +247,15 @@ export default function QuestionDetails() {
                     </header>
 
                     <main className='flex w-full space-x-4 mt-6'>
-                        {/* bagian untuk vote */}
+                        {/* bagian untuk vote detail pertanyaan */}
                         <div className='w-[55px] flex flex-col px-4 py-2 space-y-4 items-center'>
-                            <img src={upvoteIcon} alt="upvote icon" />
+                            <button onClick={upvoteQuestion}>
+                                <img src={upvoteIcon} alt="upvote icon" />
+                            </button>
                             <span>{questionDetail.vote}</span>
-                            <img src={downvoteIcon} alt="upvote icon" />
+                            <button onClick={downvoteQuestion}>
+                                <img src={downvoteIcon} alt="downvote icon" />
+                            </button>
                         </div>
 
                         {/* bagian pertanyaan */}
@@ -116,7 +299,17 @@ export default function QuestionDetails() {
                         questionDetail.Answers && questionDetail.Answers.map(answer => (
                             <div className='w-full border-b py-4'>
                                 <header className='flex w-full space-x-4 items-center'>
-                                    <img src={answer.User.foto_profil} alt="profile photo" className='w-[55px] h-[55px] rounded-full' />
+                                    <img 
+                                        src={
+                                            answer.User?.foto_profil
+                                            ? answer.User.foto_profil.startsWith('http')
+                                                ? answer.User.foto_profil
+                                                : `http://localhost:3000${answer.User.foto_profil}`
+                                            : '/default-avatar.png'
+                                        }
+                                        alt="profile photo" 
+                                        className='w-[55px] h-[55px] rounded-full object-cover' 
+                                    />
                                     <div className='flex-1'>
                                         <p className='font-bold mb-1 text-[#2C448C]'>{answer.User.nama_lengkap || answer.User.username}</p>
                                         <p className='text-xs text-[#84ACF8]'>{answer.User.jurusan || ''}</p>
@@ -127,9 +320,13 @@ export default function QuestionDetails() {
                                 <main className='flex w-full space-x-4 mt-6'>
                                     {/* bagian untuk vote */}
                                     <div className='w-[55px] flex flex-col px-4 py-2 space-y-4 items-center'>
-                                        <img src={upvoteIcon} alt="upvote icon" />
+                                        <button onClick={() => upvoteAnswer(answer.id)}>
+                                            <img src={upvoteIcon} alt="upvote icon" />
+                                        </button>
                                         <span>{answer.vote}</span>
-                                        <img src={downvoteIcon} alt="upvote icon" />
+                                        <button onClick={() => downvoteAnswer(answer.id)}>
+                                            <img src={downvoteIcon} alt="downvote icon" />
+                                        </button>
                                     </div>
 
                                     {/* bagian jawaban */}
