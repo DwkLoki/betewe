@@ -45,7 +45,7 @@ export default function AddQuestionModal(props) {
         setSelectedTags([...selectedTags, tag])
         // const updatedTags = [...selectedTags, tag]
         // setSelectedTags(updatedTags)
-    
+
         // const tagIds = updatedTags.map(tag => tag.id)
         setFormData(prevFormData => {
             return {
@@ -105,6 +105,8 @@ export default function AddQuestionModal(props) {
             setSelectedTags([])
             setFilteredTags([])
 
+            props.refreshQuestions?.()
+
             setTimeout(() => {
                 setIsLoading(false);
                 props.closeModal()
@@ -139,8 +141,8 @@ export default function AddQuestionModal(props) {
                                 <label className='font-bold'>
                                     Judul Pertanyaan
                                     <div className='font-normal text-xs text-gray-600'>Tulis pertanyaanmu secara spesifik dan bayangkan Anda sedang mengajukan pertanyaan kepada orang lain.</div>
-                                    <input 
-                                        type="text" 
+                                    <input
+                                        type="text"
                                         className='w-full font-normal px-4 py-2 border focus:outline-[#2C448C] rounded mt-2'
                                         placeholder='contoh: Bagaimana peran teknologi cloud computing dalam transformasi digital kampus?'
                                         name='title'
@@ -152,7 +154,7 @@ export default function AddQuestionModal(props) {
                                 <label className='font-bold'>
                                     Detail Pertanyaan
                                     <div className='font-normal text-xs text-gray-600'>Jelaskan lebih lengkap dari apa yang kamu tulis di judul.</div>
-                                    <textarea                               
+                                    <textarea
                                         className='w-full min-h-52 font-normal px-4 py-3 border focus:outline-[#2C448C] rounded mt-2'
                                         name='content'
                                         value={formData.content}
@@ -211,12 +213,12 @@ export default function AddQuestionModal(props) {
                             </form>
 
                             <div className='flex px-3 py-2 text-yellow-700 border-2 border-yellow-500 bg-yellow-400 rounded'>
-                                <CircleAlert strokeWidth={1.75}/>
+                                <CircleAlert strokeWidth={1.75} />
                                 <span className='ml-4'>Lengkapi form di atas sebelum mengirim pertanyaan</span>
                             </div>
 
                             <div className="flex justify-end gap-4">
-                                <button 
+                                <button
                                     type='button'
                                     onClick={props.closeModal}
                                     className='px-4 py-2 rounded-[15px] font-bold text-white bg-[#C90000]'
@@ -232,7 +234,7 @@ export default function AddQuestionModal(props) {
                                         ${!isTitleEmpty && !isContentEmpty && !isSelectedTagsEmpty ? isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]' : 'bg-[#BCBCBC] cursor-not-allowed'}
                                     `}
                                 >
-                                    <ClipLoader 
+                                    <ClipLoader
                                         color='white'
                                         size={20}
                                         loading={isLoading}

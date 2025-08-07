@@ -3,7 +3,7 @@ import notifIcon from '../assets/icons/notif-icon.svg'
 // import profilePhoto from '../assets/images/avatar-testi1.png'
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
-import { Search, X } from 'lucide-react';
+import { Search, X, House } from 'lucide-react';
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
@@ -105,7 +105,12 @@ export default function AfterLoginNav(props) {
                         <Search className="w-4 h-4 text-white" />
                     </button>
                 </form>
-                <img src={notifIcon} alt="notification icon" className='w-[40px] h-[40px] p-2' />
+
+                <Link to='/dashboard'>
+                    <House size={24} strokeWidth={2} color='#2C448C' />
+                </Link>
+
+                {/* <img src={notifIcon} alt="notification icon" className='w-[40px] h-[40px] p-2' /> */}
                 <Popover>
                     <PopoverButton className="flex">
                         <img src={props.profileCapture} alt="profile photo" className="w-10 h-10 object-cover rounded-full" />

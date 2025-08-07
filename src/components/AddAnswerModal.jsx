@@ -5,7 +5,7 @@ import { ClipLoader } from "react-spinners";
 import { toast } from 'react-toastify';
 import axios from 'axios';
 
-export default function AddQuestionModal(props) {    
+export default function AddAnswerModal(props) {
     const [answer, setAnswer] = useState('')
     const [isLoading, setIsLoading] = useState(false)
     // console.log(answer);
@@ -53,6 +53,8 @@ export default function AddQuestionModal(props) {
             // reset form
             setAnswer('')
 
+            props.refreshQuestion?.()
+
             setTimeout(() => {
                 setIsLoading(false);
                 props.closeModal()
@@ -79,7 +81,7 @@ export default function AddQuestionModal(props) {
                                 <label className='font-bold'>
                                     Jawaban
                                     <div className='font-normal text-xs text-gray-600'>Tulis jawabanmu secara jelas dan rinci. Sertakan penjelasan, contoh, atau referensi jika ada.</div>
-                                    <textarea                               
+                                    <textarea
                                         className='w-full min-h-52 font-normal px-4 py-3 border focus:outline-[#2C448C] rounded mt-2'
                                         value={answer}
                                         onChange={handleInputChange}
@@ -93,7 +95,7 @@ export default function AddQuestionModal(props) {
                             </div> */}
 
                             <div className="flex justify-end gap-4">
-                                <button 
+                                <button
                                     type='button'
                                     onClick={props.closeModal}
                                     className='px-4 py-2 rounded-[15px] font-bold text-white bg-[#C90000]'
@@ -103,13 +105,13 @@ export default function AddQuestionModal(props) {
                                 <button
                                     type='button'
                                     onClick={handleSubmit}
-                                    disabled={isLoading || isContentEmpty }
+                                    disabled={isLoading || isContentEmpty}
                                     className={`
                                         flex justify-center items-center space-x-4 px-4 py-2 rounded-[15px] font-bold text-white bg-[#2C448C]
-                                        ${ !isContentEmpty ? isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]' : 'bg-[#BCBCBC] cursor-not-allowed'}
+                                        ${!isContentEmpty ? isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]' : 'bg-[#BCBCBC] cursor-not-allowed'}
                                     `}
                                 >
-                                    <ClipLoader 
+                                    <ClipLoader
                                         color='white'
                                         size={20}
                                         loading={isLoading}

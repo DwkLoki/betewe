@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import AddAnswerModal from './AddAnswerModal'
 import axios from 'axios'
 
-export default function Question(props) {  
+export default function Question(props) {
     const [isOpen, setIsOpen] = useState(false)
 
     const closeModal = () => setIsOpen(false)
@@ -89,21 +89,21 @@ export default function Question(props) {
             console.log(error);
         }
     }
-     
+
     return (
         <div className='w-[626px]'>
             <header className='flex w-full space-x-4 items-center'>
-                <img 
+                <img
                     // src={props.data.User.foto_profil} 
                     src={
                         props.data.User?.foto_profil
-                        ? props.data.User.foto_profil.startsWith('http')
-                            ? props.data.User.foto_profil
-                            : `http://localhost:3000${props.data.User.foto_profil}`
-                        : '/default-avatar.png'
+                            ? props.data.User.foto_profil.startsWith('http')
+                                ? props.data.User.foto_profil
+                                : `http://localhost:3000${props.data.User.foto_profil}`
+                            : '/default-avatar.png'
                     }
-                    alt="profile photo" 
-                    className='w-[55px] h-[55px] rounded-full object-cover' 
+                    alt="profile photo"
+                    className='w-[55px] h-[55px] rounded-full object-cover'
                 />
                 <div className='flex-1'>
                     <p className='font-bold mb-1 text-[#2C448C]'>{props.data.User.nama_lengkap || props.data.User.username}</p>
@@ -146,7 +146,7 @@ export default function Question(props) {
                             <p className='text-sm text-[#BCBCBC] mt-2'>{formatDistanceToNow(new Date(props.data.created_at), { addSuffix: true, locale: id })}</p>
                         </div>
 
-                        <button 
+                        <button
                             onClick={() => setIsOpen(prevValue => !prevValue)}
                             className='bg-[#2C448C] w-[80px] h-[30px] text-white rounded-xl'
                         >
@@ -156,8 +156,8 @@ export default function Question(props) {
                 </div>
             </main>
 
-            {/* modal tambah pertanyaan */}
-            <AddAnswerModal 
+            {/* modal tambah jawaban */}
+            <AddAnswerModal
                 questionId={props.data.id}
                 isOpen={isOpen}
                 closeModal={closeModal}

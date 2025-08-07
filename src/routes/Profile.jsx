@@ -5,6 +5,7 @@ import upvoteIcon from '../assets/icons/upvote.svg'
 import downvoteIcon from '../assets/icons/downvote.svg'
 import Question from "../components/Question"
 import AfterLoginNav from "../components/AfterLoginNav"
+import AddQuestionModal from "../components/AddQuestionModal";
 import notFoundImg from "../assets/images/not-found.png"
 import axios from "axios"
 
@@ -12,12 +13,16 @@ export default function Profile() {
     const [user, setUser] = useState(null)
     const [questions, setQuestions] = useState([])
     const [answers, setAnswers] = useState([]);
+    const [categories, setCategories] = useState([])
+    const [isOpen, setIsOpen] = useState(false)
     const [activeTab, setActiveTab] = useState('questions'); // 'questions' | 'answers'
 
     // console.log(user)
+    const closeModal = () => setIsOpen(false)
 
     useEffect(() => {
         getMe(); // hanya ambil user dulu
+        getCategories();
     }, []);
 
     useEffect(() => {
@@ -37,7 +42,7 @@ export default function Profile() {
 
     //     return () => clearInterval(interval); // bersihkan interval saat komponen unmount
     // }, []);
-    
+
     const getMe = async () => {
         try {
             const token = localStorage.getItem("TOKEN");
@@ -46,13 +51,13 @@ export default function Profile() {
                     Authorization: `Bearer ${token}`,
                 },
             });
-            
+
             setUser(response.data);
         } catch (err) {
             console.error("Gagal mengambil data user:", err);
             // Kamu juga bisa redirect ke /login jika token invalid
         }
-    };   
+    };
 
 
     const getQuestionsByUser = async () => {
@@ -73,36 +78,45 @@ export default function Profile() {
         }
     }
 
+    const getCategories = async () => {
+        try {
+            const response = await axios.get('http://localhost:3000/api/categories')
+            setCategories(response.data)
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <section className="h-screen overflow-hidden">
             <header className="fixed top-0 left-0 right-0 z-20 bg-[#F2F2F2] shadow">
-                <AfterLoginNav 
+                <AfterLoginNav
                     profileCapture={user?.foto_profil
-                    ? user.foto_profil.startsWith('http')
-                        ? user.foto_profil
-                        : `http://localhost:3000${user.foto_profil}`
-                    : '/default-avatar.png'} 
+                        ? user.foto_profil.startsWith('http')
+                            ? user.foto_profil
+                            : `http://localhost:3000${user.foto_profil}`
+                        : '/default-avatar.png'}
                 />
             </header>
 
             <main className="flex ml-[400px] pt-24 h-screen">
                 <aside className="fixed flex flex-col space-y-6 top-20 left-0 w-[390px] h-[calc(100vh-80px)] bg-white border-r z-10 p-6 overflow-y-auto">
                     <Link to='/profile/setting' className='relative group flex justify-end' >
-                        <Pencil color="#2C448C" size={20} strokeWidth={1.75}/>
+                        <Pencil color="#2C448C" size={20} strokeWidth={1.75} />
                         <span className="absolute top-full mt-3 hidden group-hover:block bg-[#2C448C] text-white text-xs px-2 py-1 rounded">
                             Edit Profil
                         </span>
                     </Link>
                     <div className="flex justify-center">
-                        <img 
+                        <img
                             src={
                                 user?.foto_profil
-                                ? user.foto_profil.startsWith('http')
-                                    ? user.foto_profil
-                                    : `http://localhost:3000${user.foto_profil}`
-                                : '/default-avatar.png'
-                            } 
-                            alt="profile photo" 
+                                    ? user.foto_profil.startsWith('http')
+                                        ? user.foto_profil
+                                        : `http://localhost:3000${user.foto_profil}`
+                                    : '/default-avatar.png'
+                            }
+                            alt="profile photo"
                             className="rounded-full w-28 h-28 object-cover text-center"
                         />
                     </div>
@@ -151,13 +165,13 @@ export default function Profile() {
                         </nav>
 
                         <button
-                            // onClick={() => setIsOpen(prevValue => !prevValue)}
+                            onClick={() => setIsOpen(prevValue => !prevValue)}
                             className="rounded-xl bg-[#2C448C] w-fit py-2 px-3 text-center text-white font-bold"
                         >
                             Tambah Pertanyaan
                         </button>
                     </div>
-                    
+
                     {activeTab === 'questions' && (
                         questions.length === 0 ?
                             (
@@ -173,7 +187,7 @@ export default function Profile() {
                     )}
 
                     {activeTab === 'answers' && (
-                        answers.length === 0 ? 
+                        answers.length === 0 ?
                             (
                                 <div className='flex flex-col justify-center items-center'>
                                     <img className="w-[200px] mb-4" src={notFoundImg} alt="content not found" />
@@ -184,16 +198,16 @@ export default function Profile() {
                             : answers.map(answer => (
                                 <div className='w-full border-b py-4'>
                                     <header className='flex w-full space-x-4 items-center'>
-                                        <img 
+                                        <img
                                             src={
                                                 answer.User?.foto_profil
-                                                ? answer.User.foto_profil.startsWith('http')
-                                                    ? answer.User.foto_profil
-                                                    : `http://localhost:3000${answer.User.foto_profil}`
-                                                : '/default-avatar.png'
-                                            } 
-                                            alt="profile photo" 
-                                            className='w-[55px] h-[55px] rounded-full object-cover' 
+                                                    ? answer.User.foto_profil.startsWith('http')
+                                                        ? answer.User.foto_profil
+                                                        : `http://localhost:3000${answer.User.foto_profil}`
+                                                    : '/default-avatar.png'
+                                            }
+                                            alt="profile photo"
+                                            className='w-[55px] h-[55px] rounded-full object-cover'
                                         />
                                         <div className='flex-1'>
                                             <p className='font-bold mb-1 text-[#2C448C]'>{answer.User.nama_lengkap || answer.User.username}</p>
@@ -224,11 +238,12 @@ export default function Profile() {
                 </div>
 
                 {/* modal tambah pertanyaan */}
-                {/* <AddQuestionModal 
+                <AddQuestionModal
                     categories={categories}
                     isOpen={isOpen}
                     closeModal={closeModal}
-                /> */}
+                    refreshQuestions={getQuestionsByUser}
+                />
             </main>
         </section>
     )

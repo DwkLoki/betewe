@@ -8,21 +8,24 @@ import { id } from 'date-fns/locale'  // opsional kalau mau bahasa Indonesia
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom'
 import AfterLoginNav from '../components/AfterLoginNav'
+import AddAnswerModal from '../components/AddAnswerModal'
 import axios from 'axios'
 
 export default function QuestionDetails() {
     const [user, setUser] = useState(null)
     const [questionDetail, setQuestionDetail] = useState({})
+    const [isOpen, setIsOpen] = useState(false)
     const questionId = useParams()
+    const closeModal = () => setIsOpen(false)
     // console.log(questionId)
 
     useEffect(() => {
         getMe()
     }, [])
-    
+
     useEffect(() => {
         getQuestionDetail()
-    }, [questionId.id]);  
+    }, [questionId.id]);
 
     const getMe = async () => {
         try {
@@ -38,7 +41,7 @@ export default function QuestionDetails() {
             console.error("Gagal mengambil data user:", err);
             // Kamu juga bisa redirect ke /login jika token invalid
         }
-    };  
+    };
 
     const getQuestionDetail = async () => {
         try {
@@ -208,19 +211,19 @@ export default function QuestionDetails() {
             console.log(error);
         }
     }
-    
+
     console.log(questionDetail)
 
     return (
         <section>
             <header className="fixed top-0 left-0 right-0 z-20 bg-[#F2F2F2] shadow">
-                <AfterLoginNav 
+                <AfterLoginNav
                     profileCapture={
                         user?.foto_profil
-                        ? user?.foto_profil.startsWith('http')
-                            ? user?.foto_profil
-                            : `http://localhost:3000${user?.foto_profil}`
-                        : '/default-avatar.png'
+                            ? user?.foto_profil.startsWith('http')
+                                ? user?.foto_profil
+                                : `http://localhost:3000${user?.foto_profil}`
+                            : '/default-avatar.png'
                     }
                 />
             </header>
@@ -228,16 +231,16 @@ export default function QuestionDetails() {
             <main className='flex flex-col fixed top-20 pt-8 items-center w-full h-[calc(100vh-80px)] overflow-y-auto'>
                 <div className='w-[626px] pb-4 border-b-2'>
                     <header className='flex w-full space-x-4 items-center'>
-                        <img 
+                        <img
                             src={
                                 questionDetail.User?.foto_profil
-                                ? questionDetail.User.foto_profil.startsWith('http')
-                                    ? questionDetail.User.foto_profil
-                                    : `http://localhost:3000${questionDetail.User.foto_profil}`
-                                : '/default-avatar.png'
+                                    ? questionDetail.User.foto_profil.startsWith('http')
+                                        ? questionDetail.User.foto_profil
+                                        : `http://localhost:3000${questionDetail.User.foto_profil}`
+                                    : '/default-avatar.png'
                             }
                             alt="profile photo"
-                            className='w-[55px] h-[55px] rounded-full object-cover' 
+                            className='w-[55px] h-[55px] rounded-full object-cover'
                         />
                         <div className='flex-1'>
                             <p className='font-bold mb-1 text-[#2C448C]'>{questionDetail.User?.nama_lengkap || questionDetail.User?.username}</p>
@@ -277,17 +280,30 @@ export default function QuestionDetails() {
                                     </ul>
 
                                     {
-                                        questionDetail.created_at && 
+                                        questionDetail.created_at &&
                                         <p className='text-sm text-[#BCBCBC] mt-2'>{formatDistanceToNow(new Date(questionDetail.created_at), { addSuffix: true, locale: id })}</p>
                                     }
 
                                 </div>
 
-                                <button className='bg-[#2C448C] w-[80px] h-[30px] text-white rounded-xl'>Jawab</button>
+                                <button
+                                    onClick={() => setIsOpen(prevValue => !prevValue)}
+                                    className='bg-[#2C448C] w-[80px] h-[30px] text-white rounded-xl'
+                                >
+                                    Jawab
+                                </button>
                             </div>
                         </div>
                     </main>
                 </div>
+
+                {/* modal tambah jawaban */}
+                <AddAnswerModal
+                    questionId={questionId.id}
+                    isOpen={isOpen}
+                    closeModal={closeModal}
+                    refreshQuestion={getQuestionDetail}
+                />
 
                 <div className="w-[626px] my-4 pl-11">
                     <p className="text-left font-bold">{questionDetail.Answers?.length} jawaban</p>
@@ -299,16 +315,16 @@ export default function QuestionDetails() {
                         questionDetail.Answers && questionDetail.Answers.map(answer => (
                             <div className='w-full border-b py-4'>
                                 <header className='flex w-full space-x-4 items-center'>
-                                    <img 
+                                    <img
                                         src={
                                             answer.User?.foto_profil
-                                            ? answer.User.foto_profil.startsWith('http')
-                                                ? answer.User.foto_profil
-                                                : `http://localhost:3000${answer.User.foto_profil}`
-                                            : '/default-avatar.png'
+                                                ? answer.User.foto_profil.startsWith('http')
+                                                    ? answer.User.foto_profil
+                                                    : `http://localhost:3000${answer.User.foto_profil}`
+                                                : '/default-avatar.png'
                                         }
-                                        alt="profile photo" 
-                                        className='w-[55px] h-[55px] rounded-full object-cover' 
+                                        alt="profile photo"
+                                        className='w-[55px] h-[55px] rounded-full object-cover'
                                     />
                                     <div className='flex-1'>
                                         <p className='font-bold mb-1 text-[#2C448C]'>{answer.User.nama_lengkap || answer.User.username}</p>
