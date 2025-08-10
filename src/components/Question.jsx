@@ -7,6 +7,7 @@ import { id } from 'date-fns/locale'  // opsional kalau mau bahasa Indonesia
 import { Link } from 'react-router-dom'
 import { useState } from 'react'
 import { toast } from 'react-toastify';
+import { Trash } from 'lucide-react';
 import AddAnswerModal from './AddAnswerModal'
 import axios from 'axios'
 
@@ -14,7 +15,7 @@ export default function Question(props) {
     const [isOpen, setIsOpen] = useState(false)
 
     const closeModal = () => setIsOpen(false)
-    // console.log(props);
+    // console.log('Detail Data: ', props);
 
     const upvote = async () => {
         try {
@@ -90,6 +91,48 @@ export default function Question(props) {
         }
     }
 
+    const deleteQuestion = async () => {
+        try {
+            const token = localStorage.getItem('TOKEN')
+            const response = await axios.delete(`http://localhost:3000/api/questions/${props.data.id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+            toast.success('Hapus pertanyaan berhasil!', {
+                position: 'top-center',
+                autoClose: 2000
+            })
+
+            // console.log(response);
+        } catch (error) {
+            // Handle error responses
+            if (error.response?.status === 400) {
+                toast.error('Tidak dapat menghapus pertanyaan yang memiliki jawaban dengan lebih dari 1 upvote.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else if (error.response?.status === 401) {
+                toast.error('Silakan login terlebih dahulu untuk hapus pertanyaan.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else if (error.response?.status === 403) {
+                toast.error('Kamu hanya dapat menghapus pertanyaan milikmu sendiri.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else {
+                toast.error('Terjadi kesalahan. Silakan coba lagi nanti.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            }
+            console.log(error);
+        }
+    }
+
     return (
         <div className='w-[626px]'>
             <header className='flex w-full space-x-4 items-center'>
@@ -109,7 +152,10 @@ export default function Question(props) {
                     <p className='font-bold mb-1 text-[#2C448C]'>{props.data.User.nama_lengkap || props.data.User.username}</p>
                     <p className='text-xs text-[#84ACF8]'>{props.data.User.jurusan || ''}</p>
                 </div>
-                <img src={optionsIcon} alt="options icon" />
+                {/* <img src={optionsIcon} alt="options icon" /> */}
+                <button onClick={deleteQuestion}>
+                    <Trash size={24} strokeWidth={2} color='#C90000' />
+                </button>
             </header>
 
             <main className='flex w-full space-x-4 mt-6'>

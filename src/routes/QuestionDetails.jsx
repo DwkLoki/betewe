@@ -6,17 +6,21 @@ import downvoteIcon from '../assets/icons/downvote.svg'
 import { formatDistanceToNow } from 'date-fns'
 import { id } from 'date-fns/locale'  // opsional kalau mau bahasa Indonesia
 import { toast } from 'react-toastify';
+import { Trash, SquarePen } from 'lucide-react';
 import { Link } from 'react-router-dom'
 import AfterLoginNav from '../components/AfterLoginNav'
 import AddAnswerModal from '../components/AddAnswerModal'
+import EditAnswerModal from '../components/EditAnswerModal'
 import axios from 'axios'
 
 export default function QuestionDetails() {
     const [user, setUser] = useState(null)
     const [questionDetail, setQuestionDetail] = useState({})
     const [isOpen, setIsOpen] = useState(false)
+    const [isEditOpen, setIsEditOpen] = useState(false)
     const questionId = useParams()
     const closeModal = () => setIsOpen(false)
+    const closeEditModal = () => setIsEditOpen(false)
     // console.log(questionId)
 
     useEffect(() => {
@@ -212,7 +216,52 @@ export default function QuestionDetails() {
         }
     }
 
-    console.log(questionDetail)
+    const deleteAnswer = async (answerId) => {
+        try {
+            const token = localStorage.getItem('TOKEN')
+            const response = await axios.delete(`http://localhost:3000/api/answers/${answerId}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+            toast.success('Hapus jawaban berhasil!', {
+                position: 'top-center',
+                autoClose: 2000
+            })
+
+            // ✅ Refresh data setelah vote
+            getQuestionDetail()
+
+            // console.log(response);
+        } catch (error) {
+            // Handle error responses
+            if (error.response?.status === 400) {
+                toast.error('Tidak dapat menghapus jawaban yang memiliki lebih dari 1 upvote.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else if (error.response?.status === 401) {
+                toast.error('Silakan login terlebih dahulu untuk hapus jawaban.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else if (error.response?.status === 403) {
+                toast.error('Kamu hanya dapat menghapus jawaban milikmu sendiri.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else {
+                toast.error('Terjadi kesalahan. Silakan coba lagi nanti.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            }
+            console.log(error);
+        }
+    }
+
+    // console.log(questionDetail)
 
     return (
         <section>
@@ -313,7 +362,7 @@ export default function QuestionDetails() {
                 <div className='flex flex-col w-[626px] pl-11'>
                     {
                         questionDetail.Answers && questionDetail.Answers.map(answer => (
-                            <div className='w-full border-b py-4'>
+                            <div key={questionDetail.id} className='w-full border-b py-4'>
                                 <header className='flex w-full space-x-4 items-center'>
                                     <img
                                         src={
@@ -330,8 +379,36 @@ export default function QuestionDetails() {
                                         <p className='font-bold mb-1 text-[#2C448C]'>{answer.User.nama_lengkap || answer.User.username}</p>
                                         <p className='text-xs text-[#84ACF8]'>{answer.User.jurusan || ''}</p>
                                     </div>
+                                    <div className='flex items-center space-x-2'>
+                                        <button onClick={() => deleteAnswer(answer.id)} title='Hapus jawaban'>
+                                            <Trash size={24} strokeWidth={2} color='#C90000' />
+                                        </button>
+                                        <button
+                                            onClick={() => {
+                                                if (answer.User.id !== user?.id) {
+                                                    toast.error('Kamu hanya dapat mengedit jawaban milikmu sendiri.', {
+                                                        position: 'top-center',
+                                                        autoClose: 2000
+                                                    })
+                                                    return
+                                                }
+                                                setIsEditOpen(prevValue => !prevValue)
+                                            }}
+                                            title='Edit jawaban'
+                                        >
+                                            <SquarePen size={24} strokeWidth={2} color='#de9502' />
+                                        </button>
+                                    </div>
                                     {/* <img src={optionsIcon} alt="options icon" /> */}
                                 </header>
+
+                                {/* modal edit jawaban */}
+                                <EditAnswerModal
+                                    answer={answer}
+                                    isEditOpen={isEditOpen}
+                                    closeEditModal={closeEditModal}
+                                    refreshQuestion={getQuestionDetail}
+                                />
 
                                 <main className='flex w-full space-x-4 mt-6'>
                                     {/* bagian untuk vote */}
