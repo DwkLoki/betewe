@@ -3,7 +3,7 @@ import Question from "../components/Question";
 import AfterLoginNav from "../components/AfterLoginNav"
 import AddQuestionModal from "../components/AddQuestionModal"
 // import { jwtDecode } from "jwt-decode";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom"
 import axios from "axios";
 
@@ -13,11 +13,16 @@ export default function Dashboard() {
     const [categories, setCategories] = useState([])
     const [isOpen, setIsOpen] = useState(false)
     const [searchParams] = useSearchParams();
+    const [isSidebarOpen, setIsSidebarOpen] = useState(false)
+
+    const sidebarRef = useRef(null); // ref untuk sidebar
+    const toggleButtonRef = useRef(null); // ref untuk tombol toggle
 
     // console.log(searchParams);
 
     // const openModal = () => setIsOpen(true)
     const closeModal = () => setIsOpen(false)
+    const sidebarToggle = () => setIsSidebarOpen(prev => !prev)
 
     useEffect(() => {
         getMe()
@@ -76,6 +81,30 @@ export default function Dashboard() {
         }
     }
 
+    // Auto-close jika klik di luar sidebar & tombol toggle
+    useEffect(() => {
+        const handleClickOutside = (e) => {
+            if (
+                sidebarRef.current &&
+                !sidebarRef.current.contains(e.target) &&
+                toggleButtonRef.current &&
+                !toggleButtonRef.current.contains(e.target)
+            ) {
+                setIsSidebarOpen(false);
+            }
+        };
+
+        if (isSidebarOpen) {
+            document.addEventListener("mousedown", handleClickOutside);
+        } else {
+            document.removeEventListener("mousedown", handleClickOutside);
+        }
+
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [isSidebarOpen]);
+
     return (
         <section className="h-screen overflow-hidden">
             <header className="fixed top-0 left-0 right-0 z-20 bg-[#F2F2F2] shadow">
@@ -85,11 +114,20 @@ export default function Dashboard() {
                             ? user.foto_profil
                             : `http://localhost:3000${user.foto_profil}`
                         : '/default-avatar.png'}
+                    sidebarToggle={sidebarToggle}
+                    isSidebarOpen={isSidebarOpen}
+                    toggleButtonRef={toggleButtonRef}
                 />
             </header>
 
-            <main className="flex ml-[350px] pt-24 h-screen">
-                <aside className="fixed top-20 left-0 w-[300px] h-[calc(100vh-80px)] bg-white border-r z-10 p-6 overflow-y-auto">
+            <main className="flex lg:ml-[350px] pt-24 h-screen">
+                <aside
+                    ref={sidebarRef}
+                    className={`
+                        lg:translate-x-0 fixed top-20 left-0 w-[300px] h-[calc(100vh-80px)] bg-white border-r z-10 p-6 overflow-y-auto 
+                        transform transition-transform duration-300 ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+                    `}
+                >
                     <button
                         onClick={() => setIsOpen(prevValue => !prevValue)}
                         className="mb-4 border rounded-xl bg-[#2C448C] w-fit py-2 px-3 text-center text-white font-bold"
@@ -98,7 +136,7 @@ export default function Dashboard() {
                     </button>
                     <Filter />
                 </aside>
-                <div className="flex flex-col flex-1 h-full space-y-16 overflow-y-auto">
+                <div className="flex flex-col flex-1 h-full space-y-16 lg:items-start items-center overflow-y-auto">
                     {
                         questions.length === 0 ? <p className="mt-10">Belum ada pertanyaan.</p> :
                             questions.map(question => {

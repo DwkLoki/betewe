@@ -1,9 +1,10 @@
 import navLogo from '../assets/icons/navbar-logo.svg'
+import beteweLogo from '../assets/icons/betewe-logo.png'
 import notifIcon from '../assets/icons/notif-icon.svg'
 // import profilePhoto from '../assets/images/avatar-testi1.png'
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
-import { Search, X, House } from 'lucide-react';
+import { Search, X, House, AlignJustify } from 'lucide-react';
 import { Link } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 
@@ -74,12 +75,45 @@ export default function AfterLoginNav(props) {
     };
 
     return (
-        <nav className="flex items-center justify-between h-20 px-20">
-            <Link to='/dashboard'>
-                <img src={navLogo} alt="Navbar Logo" />
-            </Link>
+        <nav className="flex items-center justify-between h-20 lg:px-20 md:px-10 px-5">
+            <div className='flex items-center space-x-5'>
+                <button
+                    ref={props.toggleButtonRef} // pasang ref
+                    onClick={(e) => {
+                        e.stopPropagation(); // cegah bubbling
+                        props.sidebarToggle();
+                    }}
+                    className='lg:hidden relative w-8 h-8 flex items-center justify-center'
+                >
+                    {/* Icon Menu */}
+                    <span
+                        className={`absolute transition-all duration-200 ease-in-out ${props.isSidebarOpen ? 'opacity-0 scale-75 rotate-90' : 'opacity-100 scale-100 rotate-0'
+                            }`}
+                    >
+                        <AlignJustify size={24} strokeWidth={2} color="#2C448C" />
+                    </span>
+
+                    {/* Icon Close */}
+                    <span
+                        className={`absolute transition-all duration-200 ease-in-out ${props.isSidebarOpen ? 'opacity-100 scale-100 rotate-0' : 'opacity-0 scale-75 -rotate-90'
+                            }`}
+                    >
+                        <X size={24} strokeWidth={2} color="#2C448C" />
+                    </span>
+                </button>
+                <Link to='/dashboard'>
+                    <img src={navLogo} className='md:block hidden' alt="Navbar Logo" />
+                    <img src={beteweLogo} className='md:hidden block w-20' lt="Navbar Logo" />
+                </Link>
+            </div>
             <div className='flex items-center space-x-6'>
-                <form onSubmit={handleSearch} className='flex items-center space-x-4 w-full h-[44px] sm:w-[340px] sm:h-[40px] bg-white rounded-2xl pl-6 pr-2'>
+                <button
+                    type="button"
+                    className='sm:hidden w-[25px] h-[25px] sm:w-[25px] sm:h-[25px] bg-[#84ACF8] rounded-full flex items-center justify-center hover:bg-[#6B9BF7] transition-colors'
+                >
+                    <Search className="w-4 h-4 text-white" />
+                </button>
+                <form onSubmit={handleSearch} className='sm:flex hidden items-center space-x-4 w-full h-[44px] sm:w-[340px] sm:h-[40px] bg-white rounded-2xl pl-6 pr-2'>
                     <input
                         type="text"
                         placeholder='Temukan jawaban dari pertanyaanmu'

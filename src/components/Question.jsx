@@ -134,7 +134,7 @@ export default function Question(props) {
     }
 
     return (
-        <div className='w-[626px]'>
+        <div className='w-11/12 max-w-[626px]'>
             <header className='flex w-full space-x-4 items-center'>
                 <img
                     // src={props.data.User.foto_profil} 
@@ -171,33 +171,39 @@ export default function Question(props) {
                 </div>
 
                 {/* bagian pertanyaan */}
-                <div className='flex-1'>
+                <div className='flex-1 space-y-4'>
                     <Link to={`/question/${props.data.id}`} className='text-2xl font-bold hover:text-[#2C448C]'>
                         {props.data.title}
                     </Link>
 
-                    <div className='flex justify-between'>
-                        <div className='mr-5'>
-                            <ul className='flex flex-wrap'>
+                    <div className='flex gap-4'>
+                        <div className='flex-1'>
+                            <ul className='flex flex-wrap gap-2'>
                                 {
                                     props.data.categories.map(category => {
-                                        return <li key={category.id} className='rounded-xl text-xs text-white bg-[#BCBCBC] px-3 py-2 w-fit mr-2 mt-2'>{category.name}</li>
+                                        return (
+                                            <li
+                                                key={category.id}
+                                                className='inline-flex w-fit max-w-full items-center rounded-xl text-xs text-white bg-[#BCBCBC] px-3 py-1 min-h-[30px]'
+                                            >
+                                                {category.name}
+                                            </li>
+                                        )
                                     })
                                 }
-                                {/* <li className='rounded-xl text-xs text-white bg-[#BCBCBC] px-3 py-2 w-fit mr-2 mt-2'>Teknik Informatika</li>
-                                <li className='rounded-xl text-xs text-white bg-[#BCBCBC] px-3 py-2 w-fit mr-2 mt-2'>Sistem Informasi</li>
-                                <li className='rounded-xl text-xs text-white bg-[#BCBCBC] px-3 py-2 w-fit mr-2 mt-2'>Teknik</li> */}
                             </ul>
 
                             <p className='text-sm text-[#BCBCBC] mt-2'>{formatDistanceToNow(new Date(props.data.created_at), { addSuffix: true, locale: id })}</p>
                         </div>
 
-                        <button
-                            onClick={() => setIsOpen(prevValue => !prevValue)}
-                            className='bg-[#2C448C] w-[80px] h-[30px] text-white rounded-xl'
-                        >
-                            Jawab
-                        </button>
+                        <div className='w-[80px] flex justify-end'>
+                            <button
+                                onClick={() => setIsOpen(prevValue => !prevValue)}
+                                className='bg-[#2C448C] w-full h-[30px] text-white rounded-xl'
+                            >
+                                Jawab
+                            </button>
+                        </div>
                     </div>
                 </div>
             </main>
