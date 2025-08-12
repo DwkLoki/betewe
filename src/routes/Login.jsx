@@ -127,7 +127,7 @@ export default function Login() {
             <div className='lg:block hidden w-1/2 h-full'>
                 <img src={registerPoster} className='object-cover h-full w-full' alt="Register Page Poster" />
             </div>
-            <div className='lg:w-1/2 w-full h-full py-4 pl-12 pr-6 overflow-auto'>
+            <div className='lg:w-1/2 w-full h-full py-4 md:pl-12 pl-6 pr-6 overflow-auto'>
                 <div className='flex justify-between'>
                     <Link to='/' className='flex items-center space-x-1'>
                         <SquareArrowLeft color='#2C448C' size={20} />
@@ -138,14 +138,14 @@ export default function Login() {
                     </Link>
                 </div>
 
-                <h1 className='text-[2.25rem] font-bold'>Hai,</h1>
-                <h1 className='text-[2.25rem] font-bold'>Selamat datang kembali</h1>
-                <p className='text-[1.25rem] mb-6'>Masuk dan temukan jawaban dari rasa penasaranmu.</p>
+                <h1 className='md:text-[2.25rem] text-3xl font-bold lg:text-start md:text-center'>Hai,</h1>
+                <h1 className='md:text-[2.25rem] text-3xl font-bold lg:text-start md:text-center'>Selamat datang kembali</h1>
+                <p className='md:text-[1.25rem] mb-6 lg:text-start md:text-center'>Masuk dan temukan jawaban dari rasa penasaranmu.</p>
 
-                <form className='flex flex-col space-y-6'>
+                <form className='flex flex-col lg:items-start items-center space-y-6 w-full'>
                     {/* input email */}
-                    <div>
-                        <div className={`flex w-[445px] h-[55px] border rounded-[15px] items-center p-[1rem] bg-white ${touchedFields.email && !validEmail ? 'border-[#C90000]' : 'border'} focus-within:border-[#2C448C]`}>
+                    <div className='md:w-[445px] w-full'>
+                        <div className={`flex h-[55px] border rounded-[15px] items-center p-4 bg-white ${touchedFields.email && !validEmail ? 'border-[#C90000]' : 'border'} focus-within:border-[#2C448C]`}>
                             <Mail className='mr-4 text-[#BCBCBC]' strokeWidth={1.25} size={25} />
                             <input
                                 type="email"
@@ -154,7 +154,7 @@ export default function Login() {
                                 value={loginData.email}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className='w-[329px] focus:outline-none'
+                                className='md:w-[329px] w-full focus:outline-none'
                             />
                         </div>
                         {touchedFields.email && (
@@ -177,8 +177,8 @@ export default function Login() {
                     </div>
 
                     {/* input password */}
-                    <div>
-                        <div className={`flex justify-between w-[445px] h-[55px] border rounded-[15px] items-center px-4 bg-white ${touchedFields.password && isPasswordEmpty ? 'border-[#C90000]' : 'border'} focus-within:border-[#2C448C]`}>
+                    <div className='md:w-[445px] w-full'>
+                        <div className={`flex h-[55px] justify-between border rounded-[15px] items-center p-4 bg-white ${touchedFields.password && isPasswordEmpty ? 'border-[#C90000]' : 'border'} focus-within:border-[#2C448C]`}>
                             <Lock className='text-[#BCBCBC]' strokeWidth={1.25} size={25} />
 
                             <input
@@ -188,7 +188,7 @@ export default function Login() {
                                 value={loginData.password}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className='flex-1 text-blue-900 mx-4 focus:outline-none text-gray-700'
+                                className='flex-1 text-blue-900 mx-4 focus:outline-none'
                             />
 
                             <button type='button' onClick={() => setShowPassword(prev => !prev)}>
@@ -211,7 +211,7 @@ export default function Login() {
                         )}
                     </div>
 
-                    <p className="text-sm mt-4 text-end max-w-[445px]">
+                    <p className="inline-flex justify-end text-sm mt-4 md:w-[445px] w-full">
                         <Link to="#" className="text-[#2C448C]">
                             Lupa kata sandi?
                         </Link>
@@ -220,7 +220,7 @@ export default function Login() {
                     <button
                         onClick={handleSubmit}
                         className={`
-                            flex items-center justify-center space-x-4 text-xl w-[445px] h-[50px] border rounded-[15px] font-bold text-white 
+                            flex items-center justify-center space-x-4 text-xl md:w-[445px] w-full h-[50px] border rounded-[15px] font-bold text-white 
                             ${isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]'} 
                         `}
                     >
@@ -234,8 +234,8 @@ export default function Login() {
                 </form>
 
                 {/* login jika sudah punya akun */}
-                <p className="text-sm text-black mt-4 text-center max-w-[445px]">
-                    Belum memiliki akun?{' '}
+                <p className="inline-flex gap-1 text-sm text-black mt-4 justify-center lg:w-[445px] w-full">
+                    Belum memiliki akun?
                     <Link to="/register" className="text-[#2C448C]">
                         Daftar
                     </Link>
