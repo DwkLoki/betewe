@@ -11,7 +11,7 @@ export default function Login() {
     const [loginData, setLoginData] = useState({
         email: '',
         password: ''
-    }) 
+    })
     const [touchedFields, setTouchedFields] = useState({
         email: false,
         password: false
@@ -25,7 +25,7 @@ export default function Login() {
     const isEmailEmpty = loginData.email.trim() === '';
     const isPasswordEmpty = loginData.password.trim() === '';
     const navigate = useNavigate()
-    
+
     const handleChange = (e) => {
         const { value, name } = e.target
 
@@ -35,10 +35,10 @@ export default function Login() {
                 [name]: true
             }
         })
-        
+
         setLoginData(prevRegisterData => {
             return {
-                ...prevRegisterData, 
+                ...prevRegisterData,
                 [name]: value
             }
         })
@@ -100,7 +100,7 @@ export default function Login() {
             });
 
             localStorage.setItem('TOKEN', res.data.token)
-            
+
             // beri jeda sedikit sebelum redirect
             setTimeout(() => {
                 navigate('/dashboard');
@@ -124,10 +124,10 @@ export default function Login() {
 
     return (
         <section className='flex h-screen text-[#2C448C] bg-[#F2F2F2]'>
-            <div className='w-1/2 h-full'>
+            <div className='lg:block hidden w-1/2 h-full'>
                 <img src={registerPoster} className='object-cover h-full w-full' alt="Register Page Poster" />
             </div>
-            <div className='w-1/2 h-full py-4 pl-12 pr-6 overflow-auto'>
+            <div className='lg:w-1/2 w-full h-full py-4 pl-12 pr-6 overflow-auto'>
                 <div className='flex justify-between'>
                     <Link to='/' className='flex items-center space-x-1'>
                         <SquareArrowLeft color='#2C448C' size={20} />
@@ -210,15 +210,15 @@ export default function Login() {
                             </div>
                         )}
                     </div>
-                    
+
                     <p className="text-sm mt-4 text-end max-w-[445px]">
                         <Link to="#" className="text-[#2C448C]">
                             Lupa kata sandi?
                         </Link>
                     </p>
 
-                    <button 
-                        onClick={handleSubmit} 
+                    <button
+                        onClick={handleSubmit}
                         className={`
                             flex items-center justify-center space-x-4 text-xl w-[445px] h-[50px] border rounded-[15px] font-bold text-white 
                             ${isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]'} 
@@ -232,7 +232,7 @@ export default function Login() {
                         <span>Masuk</span>
                     </button>
                 </form>
-                
+
                 {/* login jika sudah punya akun */}
                 <p className="text-sm text-black mt-4 text-center max-w-[445px]">
                     Belum memiliki akun?{' '}

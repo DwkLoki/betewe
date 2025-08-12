@@ -136,7 +136,7 @@ export default function AddQuestionModal(props) {
 
                 <div className="flex w-full h-full items-center justify-center p-4">
                     <DialogPanel className="w-11/12 h-5/6 rounded-3xl bg-white p-0 z-50 overflow-hidden">
-                        <div className="px-10 py-7 space-y-6 mr-3 h-full overflow-y-auto">
+                        <div className="md:px-10 md:py-7 px-5 py-3 space-y-6 mr-3 h-full overflow-y-auto">
                             <form className='flex flex-col space-y-6'>
                                 <label className='font-bold'>
                                     Judul Pertanyaan
@@ -217,11 +217,11 @@ export default function AddQuestionModal(props) {
                                 <span className='ml-4'>Lengkapi form di atas sebelum mengirim pertanyaan</span>
                             </div>
 
-                            <div className="flex justify-end gap-4">
+                            <div className="flex md:justify-end justify-center gap-4">
                                 <button
                                     type='button'
                                     onClick={props.closeModal}
-                                    className='px-4 py-2 rounded-[15px] font-bold text-white bg-[#C90000]'
+                                    className='sm:px-4 px-3 py-2 rounded-[15px] font-bold text-white bg-[#C90000]'
                                 >
                                     Batalkan
                                 </button>
@@ -230,7 +230,7 @@ export default function AddQuestionModal(props) {
                                     onClick={handleSubmit}
                                     disabled={isLoading || isTitleEmpty || isContentEmpty || isSelectedTagsEmpty}
                                     className={`
-                                        flex justify-center items-center space-x-4 px-4 py-2 rounded-[15px] font-bold text-white bg-[#2C448C]
+                                        flex justify-center items-center space-x-4 sm:px-4 px-3 py-2 rounded-[15px] font-bold text-white bg-[#2C448C]
                                         ${!isTitleEmpty && !isContentEmpty && !isSelectedTagsEmpty ? isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]' : 'bg-[#BCBCBC] cursor-not-allowed'}
                                     `}
                                 >

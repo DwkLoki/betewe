@@ -278,7 +278,7 @@ export default function QuestionDetails() {
             </header>
 
             <main className='flex flex-col fixed top-20 pt-8 items-center w-full h-[calc(100vh-80px)] overflow-y-auto'>
-                <div className='w-[626px] pb-4 border-b-2'>
+                <div className='w-11/12 md:w-[626px] pb-4 border-b-2'>
                     <header className='flex w-full space-x-4 items-center'>
                         <img
                             src={
@@ -311,19 +311,26 @@ export default function QuestionDetails() {
                         </div>
 
                         {/* bagian pertanyaan */}
-                        <div className='flex-1'>
-                            <p className='text-2xl font-bold mb-2 text-[#2C448C]'>
+                        <div className='flex-1 space-y-4'>
+                            <p className='lg:text-2xl md:text-xl text-lg font-bold text-[#2C448C]'>
                                 {questionDetail.title}
                             </p>
 
                             <p>{questionDetail.content}</p>
 
-                            <div className='flex justify-between'>
-                                <div className='mr-5'>
-                                    <ul className='flex flex-wrap'>
+                            <div className='flex gap-4'>
+                                <div className='flex-1'>
+                                    <ul className='flex flex-wrap gap-2'>
                                         {
                                             questionDetail.categories?.map(category => {
-                                                return <li key={category.id} className='rounded-xl text-xs text-white bg-[#BCBCBC] px-3 py-2 w-fit mr-2 mt-2'>{category.name}</li>
+                                                return (
+                                                    <li
+                                                        key={category.id}
+                                                        className='inline-flex w-fit max-w-full items-center rounded-xl text-xs text-white bg-[#BCBCBC] px-3 py-1 min-h-[30px]'
+                                                    >
+                                                        {category.name}
+                                                    </li>
+                                                )
                                             })
                                         }
                                     </ul>
@@ -335,12 +342,14 @@ export default function QuestionDetails() {
 
                                 </div>
 
-                                <button
-                                    onClick={() => setIsOpen(prevValue => !prevValue)}
-                                    className='bg-[#2C448C] w-[80px] h-[30px] text-white rounded-xl'
-                                >
-                                    Jawab
-                                </button>
+                                <div className='w-[80px] flex justify-end'>
+                                    <button
+                                        onClick={() => setIsOpen(prevValue => !prevValue)}
+                                        className='bg-[#2C448C] w-full h-[30px] text-white rounded-xl'
+                                    >
+                                        Jawab
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </main>
@@ -354,12 +363,12 @@ export default function QuestionDetails() {
                     refreshQuestion={getQuestionDetail}
                 />
 
-                <div className="w-[626px] my-4 pl-11">
+                <div className="w-11/12 md:w-[626px] my-4 md:pl-11 pl-6">
                     <p className="text-left font-bold">{questionDetail.Answers?.length} jawaban</p>
                 </div>
 
                 {/* daftar jawaban */}
-                <div className='flex flex-col w-[626px] pl-11'>
+                <div className='flex flex-col w-11/12 md:w-[626px] md:pl-11 pl-6'>
                     {
                         questionDetail.Answers && questionDetail.Answers.map(answer => (
                             <div key={questionDetail.id} className='w-full border-b py-4'>

@@ -76,7 +76,7 @@ export default function AddAnswerModal(props) {
 
                 <div className="flex w-full h-full items-center justify-center p-4">
                     <DialogPanel className="w-11/12 h-5/6 rounded-3xl bg-white p-0 z-50 overflow-hidden">
-                        <div className="px-10 py-7 space-y-6 mr-3 h-full overflow-y-auto">
+                        <div className="md:px-10 md:py-7 px-5 py-3 space-y-6 mr-3 h-full overflow-y-auto">
                             <form className='flex flex-col space-y-6'>
                                 <label className='font-bold'>
                                     Jawaban
@@ -94,7 +94,7 @@ export default function AddAnswerModal(props) {
                                 <span className='ml-4'>Lengkapi form di atas sebelum mengirim pertanyaan</span>
                             </div> */}
 
-                            <div className="flex justify-end gap-4">
+                            <div className="flex md:justify-end justify-center gap-4">
                                 <button
                                     type='button'
                                     onClick={props.closeModal}
