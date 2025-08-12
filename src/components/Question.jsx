@@ -172,7 +172,10 @@ export default function Question(props) {
 
                 {/* bagian pertanyaan */}
                 <div className='flex-1 space-y-4'>
-                    <Link to={`/question/${props.data.id}`} className='text-2xl font-bold hover:text-[#2C448C]'>
+                    <Link
+                        to={`/question/${props.data.id}`}
+                        className='lg:text-2xl md:text-xl text-lg font-bold hover:text-[#2C448C]'
+                    >
                         {props.data.title}
                     </Link>
 

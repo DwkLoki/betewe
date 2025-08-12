@@ -6,12 +6,16 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import { Search, X, House, AlignJustify } from 'lucide-react';
 import { Link } from 'react-router-dom'
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 export default function AfterLoginNav(props) {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState('');
+    const [isSearchVisible, setIsSearchVisible] = useState(true);
+
+    const searchFormRef = useRef(null);
+    const searchInputRef = useRef(null);
 
     // Ambil search query dari URL saat komponen dimuat
     useEffect(() => {
@@ -74,8 +78,35 @@ export default function AfterLoginNav(props) {
         }
     };
 
+    // Auto focus saat form muncul
+    useEffect(() => {
+        if (isSearchVisible && searchInputRef.current) {
+            searchInputRef.current.focus();
+        }
+    }, [isSearchVisible]);
+
+    // Click outside handler
+    useEffect(() => {
+        function handleClickOutside(event) {
+            // kalau form search sedang muncul DAN kliknya di luar form + di luar tombol toggle
+            if (
+                isSearchVisible &&
+                searchFormRef.current &&
+                !searchFormRef.current.contains(event.target) &&
+                !event.target.closest('#toggle-search-btn') // ID tombol toggle
+            ) {
+                setIsSearchVisible(false);
+            }
+        }
+
+        document.addEventListener('mousedown', handleClickOutside);
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside);
+        };
+    }, [isSearchVisible]);
+
     return (
-        <nav className="flex items-center justify-between h-20 lg:px-20 md:px-10 px-5">
+        <nav className="relative flex items-center justify-between h-20 lg:px-20 md:px-10 px-5">
             <div className='flex items-center space-x-5'>
                 <button
                     ref={props.toggleButtonRef} // pasang ref
@@ -108,7 +139,8 @@ export default function AfterLoginNav(props) {
             </div>
             <div className='flex items-center space-x-6'>
                 <button
-                    type="button"
+                    id="toggle-search-btn"
+                    onClick={() => setIsSearchVisible(visible => !visible)}
                     className='sm:hidden w-[25px] h-[25px] sm:w-[25px] sm:h-[25px] bg-[#84ACF8] rounded-full flex items-center justify-center hover:bg-[#6B9BF7] transition-colors'
                 >
                     <Search className="w-4 h-4 text-white" />
@@ -156,6 +188,37 @@ export default function AfterLoginNav(props) {
                     </PopoverPanel>
                 </Popover>
             </div>
+            {
+                isSearchVisible && (
+                    <form ref={searchFormRef} onSubmit={handleSearch} className='absolute top-[82px] left-1/2 -translate-x-1/2 sm:hidden flex items-center space-x-4 w-11/12 h-[44px] sm:w-[340px] sm:h-[40px] bg-white rounded-2xl pl-6 pr-2 focus-within:outline focus-within:outline-[#84ACF8]'>
+                        <input
+                            ref={searchInputRef}
+                            type="text"
+                            placeholder='Temukan jawaban dari pertanyaanmu'
+                            className='flex-1 outline-none text-sm'
+                            value={searchQuery}
+                            onChange={handleInputChange}
+                            onKeyPress={handleKeyPress}
+                            title="Masukkan kata kunci untuk mencari pertanyaan. Sistem akan mencari pertanyaan yang mengandung kata-kata yang Anda masukkan."
+                        />
+                        {searchQuery && (
+                            <button
+                                type="button"
+                                onClick={clearSearch}
+                                className='w-[20px] h-[20px] text-gray-400 hover:text-gray-600 flex items-center justify-center'
+                            >
+                                <X className="w-4 h-4" />
+                            </button>
+                        )}
+                        <button
+                            type="submit"
+                            className='w-[25px] h-[25px] sm:w-[25px] sm:h-[25px] bg-[#84ACF8] rounded-full flex items-center justify-center hover:bg-[#6B9BF7] transition-colors'
+                        >
+                            <Search className="w-4 h-4 text-white" />
+                        </button>
+                    </form>
+                )
+            }
         </nav>
     )
 }
