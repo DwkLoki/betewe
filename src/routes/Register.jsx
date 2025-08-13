@@ -13,7 +13,7 @@ export default function Register() {
         email: '',
         password: '',
         confirmedPass: ''
-    }) 
+    })
     const [touchedFields, setTouchedFields] = useState({
         userName: false,
         email: false,
@@ -36,7 +36,7 @@ export default function Register() {
     const isPasswordEmpty = registerData.password.trim() === '';
     const isConfirmedPasswordEmpty = registerData.confirmedPass.trim() === '';
     const navigate = useNavigate();
-    
+
     const handleChange = (e) => {
         const { value, name } = e.target
 
@@ -46,10 +46,10 @@ export default function Register() {
                 [name]: true
             }
         })
-        
+
         setRegisterData(prevRegisterData => {
             return {
-                ...prevRegisterData, 
+                ...prevRegisterData,
                 [name]: value
             }
         })
@@ -128,30 +128,30 @@ export default function Register() {
     //     email valid? ${validEmail}
     //     password valid? ${validPassword}
     // `);
-    
+
 
     return (
         <section className='flex h-screen text-[#2C448C] bg-[#F2F2F2]'>
-            <div className='w-1/2 h-full'>
+            <div className='lg:block hidden w-1/2 h-full'>
                 <img src={registerPoster} className='object-cover h-full w-full' alt="Register Page Poster" />
             </div>
-            <div className='w-1/2 h-full py-4 pl-12 pr-6 overflow-auto'>
+            <div className='lg:w-1/2 w-full h-full py-4 md:pl-12 pl-6 pr-6 overflow-auto'>
                 <div className='flex justify-between'>
                     <Link to='/' className='flex items-center space-x-1'>
-                        <SquareArrowLeft color='#2C448C' size={20}/>
+                        <SquareArrowLeft color='#2C448C' size={20} />
                         <p>Home</p>
                     </Link>
                     <Link to='/'>
                         <img src={beteweLogo} className='w-20 h-20' alt="Betewe Logo" />
                     </Link>
                 </div>
-                <h1 className='text-[2.25rem] font-bold'>Hai, Selamat datang</h1>
-                <p className='text-[1.25rem] mb-6'>Daftarkan akunmu untuk mendapatkan akses fitur lebih.</p>
+                <h1 className='md:text-[2.25rem] text-3xl font-bold lg:text-start md:text-center'>Hai, Selamat datang</h1>
+                <p className='md:text-[1.25rem] mb-6 lg:text-start md:text-center'>Daftarkan akunmu untuk mendapatkan akses fitur lebih.</p>
 
-                <form className='flex flex-col space-y-6'>
+                <form className='flex flex-col lg:items-start items-center space-y-6 w-full'>
                     {/* input username */}
-                    <div>
-                        <div className={`flex w-[445px] h-[55px] border rounded-[15px] items-center p-[1rem] bg-white ${touchedFields.userName ? validUserName ? 'border-[#00C938]' : 'border-[#C90000]' : 'border'} focus-within:border-[#2C448C]`}>
+                    <div className='md:w-[445px] w-full'>
+                        <div className={`flex h-[55px] border rounded-[15px] items-center p-4 bg-white ${touchedFields.userName ? validUserName ? 'border-[#00C938]' : 'border-[#C90000]' : 'border'} focus-within:border-[#2C448C]`}>
                             <User className='mr-4 text-[#BCBCBC]' strokeWidth={1.25} size={25} />
                             <input
                                 type="text"
@@ -160,7 +160,7 @@ export default function Register() {
                                 value={registerData.userName}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className='w-[329px] focus:outline-none'
+                                className='md:w-[329px] w-full focus:outline-none'
                             />
                         </div>
                         {touchedFields.userName && (
@@ -183,8 +183,8 @@ export default function Register() {
                     </div>
 
                     {/* input email */}
-                    <div>
-                        <div className={`flex w-[445px] h-[55px] border rounded-[15px] items-center p-[1rem] bg-white ${touchedFields.email ? validEmail ? 'border-[#00C938]' : 'border-[#C90000]' : 'border'} focus-within:border-[#2C448C]`}>
+                    <div className='md:w-[445px] w-full'>
+                        <div className={`flex h-[55px] border rounded-[15px] items-center p-4 bg-white ${touchedFields.email ? validEmail ? 'border-[#00C938]' : 'border-[#C90000]' : 'border'} focus-within:border-[#2C448C]`}>
                             <Mail className='mr-4 text-[#BCBCBC]' strokeWidth={1.25} size={25} />
                             <input
                                 type="email"
@@ -193,7 +193,7 @@ export default function Register() {
                                 value={registerData.email}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className='w-[329px] focus:outline-none'
+                                className='md:w-[329px] w-full focus:outline-none'
                             />
                         </div>
                         {touchedFields.email && (
@@ -216,8 +216,8 @@ export default function Register() {
                     </div>
 
                     {/* input password */}
-                    <div>
-                        <div className={`flex justify-between w-[445px] h-[55px] border rounded-[15px] items-center px-4 bg-white ${touchedFields.password ? validPassword ? ' border-[#00C938]' : 'border-[#C90000]' : 'border'} focus-within:border-[#2C448C]`}>
+                    <div className='md:w-[445px] w-full'>
+                        <div className={`flex justify-between h-[55px] border rounded-[15px] items-center p-4 bg-white ${touchedFields.password ? validPassword ? ' border-[#00C938]' : 'border-[#C90000]' : 'border'} focus-within:border-[#2C448C]`}>
                             <Lock className='text-[#BCBCBC]' strokeWidth={1.25} size={25} />
 
                             <input
@@ -227,7 +227,7 @@ export default function Register() {
                                 value={registerData.password}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className='flex-1 text-blue-900 mx-4 focus:outline-none text-gray-700'
+                                className='flex-1 text-blue-900 mx-4 focus:outline-none'
                             />
 
                             <button type='button' onClick={() => setShowPassword(prev => !prev)}>
@@ -260,8 +260,8 @@ export default function Register() {
                     </div>
 
                     {/* input konfirmasi password */}
-                    <div>
-                        <div className={`flex justify-between w-[445px] h-[55px] border rounded-[15px] items-center px-4 bg-white ${touchedFields.confirmedPass ? validMatchPass ? ' border-[#00C938]' : 'border-[#C90000]' : 'border'} focus-within:border-[#2C448C]`}>
+                    <div className='md:w-[445px] w-full'>
+                        <div className={`flex justify-between h-[55px] border rounded-[15px] items-center p-4 bg-white ${touchedFields.confirmedPass ? validMatchPass ? ' border-[#00C938]' : 'border-[#C90000]' : 'border'} focus-within:border-[#2C448C]`}>
                             <Lock className='text-[#BCBCBC]' strokeWidth={1.25} size={25} />
 
                             <input
@@ -271,7 +271,7 @@ export default function Register() {
                                 value={registerData.confirmedPass}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                className='flex-1 text-blue-900 mx-4 focus:outline-none text-gray-700'
+                                className='flex-1 text-blue-900 mx-4 focus:outline-none'
                             />
 
                             <button type='button' onClick={() => setShowConfirmedPass(prev => !prev)}>
@@ -302,16 +302,16 @@ export default function Register() {
                             )
                         )}
                     </div>
-                    <button 
+                    <button
                         type='button'
-                        onClick={handleSubmit} 
+                        onClick={handleSubmit}
                         disabled={isLoading || !validUserName || !validEmail || !validPassword || !validMatchPass}
                         className={`
-                            flex justify-center items-center space-x-4 text-xl w-[445px] h-[50px] border rounded-[15px] font-bold text-white 
+                            flex justify-center items-center space-x-4 text-xl md:w-[445px] w-full h-[50px] border rounded-[15px] font-bold text-white 
                             ${validUserName && validEmail && validPassword && validMatchPass ? isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]' : 'bg-[#BCBCBC] cursor-not-allowed'}
                         `}
                     >
-                        <ClipLoader 
+                        <ClipLoader
                             color='white'
                             size={20}
                             loading={isLoading}
@@ -319,9 +319,9 @@ export default function Register() {
                         <span>Daftar</span>
                     </button>
                 </form>
-                
+
                 {/* login jika sudah punya akun */}
-                <p className="text-sm text-black mt-4 text-center max-w-[445px]">
+                <p className="inline-flex gap-1 text-sm text-black mt-4 justify-center lg:w-[445px] w-full">
                     Sudah memiliki akun?{' '}
                     <Link to="/login" className="text-[#2C448C]">
                         Masuk

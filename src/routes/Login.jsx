@@ -233,7 +233,7 @@ export default function Login() {
                     </button>
                 </form>
 
-                {/* login jika sudah punya akun */}
+                {/* daftar jika belum punya akun */}
                 <p className="inline-flex gap-1 text-sm text-black mt-4 justify-center lg:w-[445px] w-full">
                     Belum memiliki akun?
                     <Link to="/register" className="text-[#2C448C]">
