@@ -15,7 +15,10 @@ export default function Profile() {
     const [answers, setAnswers] = useState([]);
     const [categories, setCategories] = useState([])
     const [isOpen, setIsOpen] = useState(false)
-    const [activeTab, setActiveTab] = useState('questions'); // 'questions' | 'answers'
+    const [activeTab, setActiveTab] = useState('profile'); // 'profile' | 'questions' | 'answers'
+    // const [activeTab, setActiveTab] = useState(() => {
+    //     return window.innerWidth >= 1024 ? "questions" : "profile";
+    // });
 
     // console.log(user)
     const closeModal = () => setIsOpen(false)
@@ -31,6 +34,20 @@ export default function Profile() {
             getAnswersByUser();
         }
     }, [user]);
+
+    useEffect(() => {
+        const handleResize = () => {
+            if (window.innerWidth >= 1024) {
+                setActiveTab("questions");
+            } else {
+                setActiveTab("profile");
+            }
+        };
+
+        handleResize(); // cek pertama kali
+        window.addEventListener("resize", handleResize);
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     // perbarui questions tiap 10 detik
     // useEffect(() => {
@@ -99,8 +116,9 @@ export default function Profile() {
                 />
             </header>
 
-            <main className="flex ml-[400px] pt-24 h-screen">
-                <aside className="fixed flex flex-col space-y-6 top-20 left-0 w-[390px] h-[calc(100vh-80px)] bg-white border-r z-10 p-6 overflow-y-auto">
+            <main className="flex lg:ml-[400px] pt-24 h-screen">
+                {/* bagian sidebar */}
+                <aside className="fixed lg:flex hidden flex-col space-y-6 top-20 left-0 w-[390px] h-[calc(100vh-80px)] bg-white border-r z-10 p-6 overflow-y-auto">
                     <Link to='/profile/setting' className='relative group flex justify-end' >
                         <Pencil color="#2C448C" size={20} strokeWidth={1.75} />
                         <span className="absolute top-full mt-3 hidden group-hover:block bg-[#2C448C] text-white text-xs px-2 py-1 rounded">
@@ -138,26 +156,26 @@ export default function Profile() {
                             <p className="text-end flex-1">{user?.jurusan ? user.jurusan : '-'}</p>
                         </div>
                     </div>
-                    {/* <button 
-                        onClick={() => setIsOpen(prevValue => !prevValue)}
-                        className="mb-4 border rounded-xl bg-[#2C448C] w-fit py-2 px-3 text-center text-white font-bold"
-                    >
-                        Tambah Pertanyaan
-                    </button>
-                    <Filter /> */}
                 </aside>
 
-                <div className="flex flex-col flex-1 h-full space-y-16 pl-10 pb-2 overflow-y-auto bg-white">
-                    <div className="sticky top-0 z-10 flex justify-between items-center bg-white mr-10">
-                        <nav className="flex">
+                {/* bagian info profil */}
+                <div className="flex flex-col flex-1 lg:items-start items-center h-full space-y-16 lg:pl-10 pb-2 overflow-y-auto bg-white">
+                    <div className="sticky top-0 z-10 flex gap-6 md:flex-row flex-col-reverse lg:w-[95%] md:w-[90%] w-full justify-between items-center bg-white">
+                        <nav className="flex md:pb-0 pb-3">
                             <button
-                                className={`border-r border-r-[#BCBCBC] pr-6 ${activeTab === 'questions' ? 'text-[#2C448C]' : 'text-[#BCBCBC]'}`}
+                                className={`lg:hidden block border-r-2 border-r-[#BCBCBC] pr-6 ${activeTab === 'profile' ? 'text-[#2C448C]' : 'text-[#BCBCBC]'}`}
+                                onClick={() => setActiveTab('profile')}
+                            >
+                                Profile
+                            </button>
+                            <button
+                                className={`border-r-2 border-r-[#BCBCBC] lg:pl-0 px-6 ${activeTab === 'questions' ? 'text-[#2C448C]' : 'text-[#BCBCBC]'}`}
                                 onClick={() => setActiveTab('questions')}
                             >
                                 {`${questions.length} Pertanyaan`}
                             </button>
                             <button
-                                className={`border-l border-l-[#BCBCBC] pl-6 ${activeTab === 'answers' ? 'text-[#2C448C]' : 'text-[#BCBCBC]'}`}
+                                className={`pl-6 ${activeTab === 'answers' ? 'text-[#2C448C]' : 'text-[#BCBCBC]'}`}
                                 onClick={() => setActiveTab('answers')}
                             >
                                 {`${answers.length} Jawaban`}
@@ -171,6 +189,48 @@ export default function Profile() {
                             Tambah Pertanyaan
                         </button>
                     </div>
+
+                    {activeTab === 'profile' && (
+                        <div className="flex flex-col items-center w-full space-y-6">
+                            <div className="flex justify-center">
+                                <img
+                                    src={
+                                        user?.foto_profil
+                                            ? user.foto_profil.startsWith('http')
+                                                ? user.foto_profil
+                                                : `http://localhost:3000${user.foto_profil}`
+                                            : '/default-avatar.png'
+                                    }
+                                    alt="profile photo"
+                                    className="rounded-full w-28 h-28 object-cover text-center"
+                                />
+                            </div>
+                            <Link to='/profile/setting' className='flex items-center justify-center bg-[#2C448C] w-fit px-2 py-1 rounded-xl' >
+                                <Pencil color="#ffffff" size={15} strokeWidth={1.75} />
+                                <span className="text-white text-xs px-2 py-1">
+                                    Edit Profil
+                                </span>
+                            </Link>
+                            <div className='flex flex-col w-full px-5 pb-5 space-y-2'>
+                                <div className="flex">
+                                    <p className="text-[#BCBCBC] w-2/5">Nama Pengguna</p>
+                                    <p className="text-end flex-1">{user?.username}</p>
+                                </div>
+                                <div className="flex">
+                                    <p className="text-[#BCBCBC] w-2/5">Email</p>
+                                    <p className="text-end flex-1">{user?.email}</p>
+                                </div>
+                                <div className="flex">
+                                    <p className="text-[#BCBCBC] w-2/5">Nama Lengkap</p>
+                                    <p className="text-end flex-1">{user?.nama_lengkap ? user.nama_lengkap : '-'}</p>
+                                </div>
+                                <div className="flex">
+                                    <p className="text-[#BCBCBC] w-2/5">Jurusan</p>
+                                    <p className="text-end flex-1">{user?.jurusan ? user.jurusan : '-'}</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
 
                     {activeTab === 'questions' && (
                         questions.length === 0 ?
@@ -196,7 +256,7 @@ export default function Profile() {
                                 </div>
                             )
                             : answers.map(answer => (
-                                <div className='w-full border-b py-4'>
+                                <div key={answer.id} className='w-full border-b py-4'>
                                     <header className='flex w-full space-x-4 items-center'>
                                         <img
                                             src={

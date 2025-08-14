@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import { useState, useEffect } from 'react'
 import optionsIcon from '../assets/icons/options.svg'
 import upvoteIcon from '../assets/icons/upvote.svg'
@@ -19,6 +19,7 @@ export default function QuestionDetails() {
     const [isOpen, setIsOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
     const questionId = useParams()
+    const navigate = useNavigate()
     const closeModal = () => setIsOpen(false)
     const closeEditModal = () => setIsEditOpen(false)
     // console.log(questionId)
@@ -261,6 +262,53 @@ export default function QuestionDetails() {
         }
     }
 
+    const deleteQuestion = async () => {
+        try {
+            const token = localStorage.getItem('TOKEN')
+            const response = await axios.delete(`http://localhost:3000/api/questions/${questionId.id}`, {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            })
+
+            toast.success('Hapus pertanyaan berhasil!', {
+                position: 'top-center',
+                autoClose: 2000
+            })
+
+            // beri jeda sedikit sebelum redirect
+            setTimeout(() => {
+                navigate('/dashboard');
+            }, 1500);
+
+            // console.log(response);
+        } catch (error) {
+            // Handle error responses
+            if (error.response?.status === 400) {
+                toast.error('Tidak dapat menghapus pertanyaan yang memiliki jawaban dengan lebih dari 1 upvote.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else if (error.response?.status === 401) {
+                toast.error('Silakan login terlebih dahulu untuk hapus pertanyaan.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else if (error.response?.status === 403) {
+                toast.error('Kamu hanya dapat menghapus pertanyaan milikmu sendiri.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            } else {
+                toast.error('Terjadi kesalahan. Silakan coba lagi nanti.', {
+                    position: 'top-center',
+                    autoClose: 2000
+                })
+            }
+            console.log(error);
+        }
+    }
+
     // console.log(questionDetail)
 
     return (
@@ -295,7 +343,9 @@ export default function QuestionDetails() {
                             <p className='font-bold mb-1 text-[#2C448C]'>{questionDetail.User?.nama_lengkap || questionDetail.User?.username}</p>
                             <p className='text-xs text-[#84ACF8]'>{questionDetail.User?.jurusan || ''}</p>
                         </div>
-                        <img src={optionsIcon} alt="options icon" />
+                        <button onClick={deleteQuestion}>
+                            <Trash size={24} strokeWidth={2} color='#C90000' />
+                        </button>
                     </header>
 
                     <main className='flex w-full space-x-4 mt-6'>

@@ -5,15 +5,16 @@ import notifIcon from '../assets/icons/notif-icon.svg'
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { Popover, PopoverButton, PopoverPanel } from '@headlessui/react'
 import { Search, X, House, AlignJustify } from 'lucide-react';
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { useState, useEffect, useRef } from 'react'
 
 export default function AfterLoginNav(props) {
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     const [searchQuery, setSearchQuery] = useState('');
-    const [isSearchVisible, setIsSearchVisible] = useState(true);
+    const [isSearchVisible, setIsSearchVisible] = useState(false);
 
+    const { pathname } = useLocation() // ambil path active saat ini
     const searchFormRef = useRef(null);
     const searchInputRef = useRef(null);
 
@@ -107,14 +108,17 @@ export default function AfterLoginNav(props) {
 
     return (
         <nav className="relative flex items-center justify-between h-20 lg:px-20 md:px-10 px-5">
-            <div className='flex items-center space-x-5'>
+            <div className={`flex items-center ${pathname === '/dashboard' ? 'space-x-5' : 'space-x-0'}`}>
                 <button
                     ref={props.toggleButtonRef} // pasang ref
                     onClick={(e) => {
                         e.stopPropagation(); // cegah bubbling
                         props.sidebarToggle();
                     }}
-                    className='lg:hidden relative w-8 h-8 flex items-center justify-center'
+                    className={`
+                        lg:hidden relative w-8 h-8 items-center justify-center
+                        ${pathname === '/dashboard' ? 'flex' : 'hidden'}
+                    `}
                 >
                     {/* Icon Menu */}
                     <span
