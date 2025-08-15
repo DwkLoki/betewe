@@ -421,7 +421,7 @@ export default function QuestionDetails() {
                 <div className='flex flex-col w-11/12 md:w-[626px] md:pl-11 pl-6'>
                     {
                         questionDetail.Answers && questionDetail.Answers.map(answer => (
-                            <div key={questionDetail.id} className='w-full border-b py-4'>
+                            <div key={answer.id} className='w-full border-b py-4'>
                                 <header className='flex w-full space-x-4 items-center'>
                                     <img
                                         src={

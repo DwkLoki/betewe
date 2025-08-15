@@ -160,7 +160,7 @@ export default function Profile() {
 
                 {/* bagian info profil */}
                 <div className="flex flex-col flex-1 lg:items-start items-center h-full space-y-16 lg:pl-10 pb-2 overflow-y-auto bg-white">
-                    <div className="sticky top-0 z-10 flex gap-6 md:flex-row flex-col-reverse lg:w-[95%] md:w-[90%] w-full justify-between items-center bg-white">
+                    <div className="sticky top-0 z-10 flex gap-6 md:flex-row flex-col-reverse lg:w-[95%] md:w-11/12 w-full justify-between items-center bg-white">
                         <nav className="flex md:pb-0 pb-3">
                             <button
                                 className={`lg:hidden block border-r-2 border-r-[#BCBCBC] pr-6 ${activeTab === 'profile' ? 'text-[#2C448C]' : 'text-[#BCBCBC]'}`}
@@ -256,7 +256,7 @@ export default function Profile() {
                                 </div>
                             )
                             : answers.map(answer => (
-                                <div key={answer.id} className='w-full border-b py-4'>
+                                <div key={answer.id} className='w-11/12'>
                                     <header className='flex w-full space-x-4 items-center'>
                                         <img
                                             src={
