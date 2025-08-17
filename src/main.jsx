@@ -17,6 +17,7 @@ import EditProfile from './routes/EditProfile.jsx';
 import ChangePassword from './routes/ChangePassword.jsx';
 import ProfileSetting from './routes/ProfileSetting.jsx';
 import QuestionsListWithoutLogin from './routes/QuestionsListWithoutLogin.jsx';
+import AboutUs from './routes/AboutUs.jsx';
 
 const router = createBrowserRouter([
     {
@@ -26,6 +27,10 @@ const router = createBrowserRouter([
             {
                 index: true,
                 element: <Home />
+            },
+            {
+                path: '/about-us',
+                element: <AboutUs />
             },
             {
                 path: '/register',
