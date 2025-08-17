@@ -1,11 +1,25 @@
 import navLogo from '../assets/icons/navbar-logo.svg'
 import { NavLink } from 'react-router-dom'
 import { X, AlignJustify } from 'lucide-react';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function NavBar(props) {
     const [isMenuOpen, setIsMenuOpen] = useState(false)
     const navLinkClass = ({ isActive }) => isActive ? 'text-[#2C448C]' : 'hover:text-[#2C448C]'
+
+    // Lock scroll ketika menu terbuka
+    useEffect(() => {
+        if (isMenuOpen) {
+            document.body.style.overflow = 'hidden';
+        } else {
+            document.body.style.overflow = '';
+        }
+
+        // cleanup ketika komponen unmount
+        return () => {
+            document.body.style.overflow = '';
+        };
+    }, [isMenuOpen]);
 
     return (
         <nav>

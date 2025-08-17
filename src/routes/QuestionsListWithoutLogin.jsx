@@ -7,7 +7,7 @@ import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom"
 import axios from "axios";
 
-export default function Dashboard() {
+export default function QuestionsListWithoutLogin() {
     const [user, setUser] = useState(null)
     const [questions, setQuestions] = useState([])
     const [categories, setCategories] = useState([])
@@ -105,7 +105,7 @@ export default function Dashboard() {
         };
     }, [isSidebarOpen]);
 
-    console.log('data user', user);
+    // console.log('data user', user);
 
     return (
         <section className="h-screen overflow-hidden">

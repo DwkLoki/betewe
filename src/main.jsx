@@ -40,7 +40,7 @@ const router = createBrowserRouter([
                     <ProtectedRoute>
                         <Login />
                     </ProtectedRoute>
-                ) 
+                )
             },
             {
                 path: '/dashboard',
@@ -64,7 +64,7 @@ const router = createBrowserRouter([
                     <ProtectedRoute>
                         <ProfileSetting />
                     </ProtectedRoute>
-                ), 
+                ),
                 children: [
                     {
                         index: true,
@@ -97,6 +97,10 @@ const router = createBrowserRouter([
                         element: <QuestionDetails />
                     }
                 ]
+            },
+            {
+                path: '/questions',
+                element: <h1>Halo ini daftar pertanyaan</h1>
             }
         ]
     }
