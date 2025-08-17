@@ -201,7 +201,17 @@ export default function Question(props) {
 
                         <div className='w-[80px] flex justify-end'>
                             <button
-                                onClick={() => setIsOpen(prevValue => !prevValue)}
+                                onClick={() => {
+                                    const token = localStorage.getItem('TOKEN')
+                                    if (!token) {
+                                        toast.error('Silakan login terlebih dahulu untuk jawab pertanyaan.', {
+                                            position: 'top-center',
+                                            autoClose: 2000
+                                        })
+                                        return
+                                    }
+                                    setIsOpen(prevValue => !prevValue)
+                                }}
                                 className='bg-[#2C448C] w-full h-[30px] text-white rounded-xl'
                             >
                                 Jawab

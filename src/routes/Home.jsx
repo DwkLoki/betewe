@@ -6,8 +6,38 @@ import contentImg3 from '../assets/images/content3.png'
 import TestiCarousel from '../components/testiCarousel';
 import newsLetterImg from '../assets/images/newsletter-img.png'
 import NavBar from '../components/NavBar';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 export default function Home() {
+    const [searchQuery, setSearchQuery] = useState('');
+    // const [searchParams, setSearchParams] = useSearchParams();
+    const navigate = useNavigate()
+
+    useEffect(() => {
+        // Ganti URL ke path root '/' tanpa query string
+        navigate("/", { replace: true });
+    }, [navigate]);
+
+    const handleInputChange = (e) => {
+        setSearchQuery(e.target.value);
+    };
+
+    const handleSearch = (e) => {
+        e.preventDefault();
+        navigate(`/questions?search=${searchQuery}`)
+    };
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleSearch(e);
+        }
+    };
+
+    // console.log('Search query dari elemen input:', searchQuery);
+    // console.log('Hasil Search Params:', searchParams.get("search"));
+    // console.log('query string:', searchParams.toString());
+
     return (
         <section className='text-[#1A1A1A] bg-[#F2F2F2]'>
             <header>
@@ -21,8 +51,19 @@ export default function Home() {
                         <h1 className='lg:text-4xl text-2xl font-bold'>Bingung ngerjain tugas kuliah?</h1>
                         <p className='lg:text-xl text-base lg:pt-6 lg:pb-8 pt-3 pb-4'>Tenang, Betewe siap membantu kamu mendapatkan informasi dan pembahasan sesuai topik perkuliahanmu!</p>
                         <div className='flex items-center lg:space-x-4 space-x-3 w-full h-[44px] lg:w-[415px] lg:h-[55px] bg-white rounded-2xl lg:pl-6 pl-3 pr-2 focus-within:outline focus-within:outline-[#84ACF8]'>
-                            <input type="text" placeholder='Cari jawaban dari pertanyaanmu' className='flex-1 outline-none' />
-                            <button className='w-[25px] h-[25px] lg:w-[30px] lg:h-[30px] bg-[#84ACF8] rounded-full flex items-center justify-center'>
+                            <input
+                                type="text"
+                                placeholder='Cari jawaban dari pertanyaanmu'
+                                className='flex-1 outline-none'
+                                value={searchQuery}
+                                onChange={handleInputChange}
+                                onKeyDown={handleKeyPress}
+                            />
+                            <button
+                                type='button'
+                                onClick={handleSearch}
+                                className='w-[25px] h-[25px] lg:w-[30px] lg:h-[30px] bg-[#84ACF8] rounded-full flex items-center justify-center'
+                            >
                                 <Search className="w-4 h-4 lg:w-5 lg:h-5 text-white" />
                             </button>
                         </div>

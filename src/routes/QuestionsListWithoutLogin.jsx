@@ -5,7 +5,9 @@ import AddQuestionModal from "../components/AddQuestionModal"
 // import { jwtDecode } from "jwt-decode";
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams } from "react-router-dom"
+import { toast } from 'react-toastify';
 import axios from "axios";
+import NavBar from "../components/NavBar";
 
 export default function QuestionsListWithoutLogin() {
     const [user, setUser] = useState(null)
@@ -110,16 +112,7 @@ export default function QuestionsListWithoutLogin() {
     return (
         <section className="h-screen overflow-hidden">
             <header className="fixed top-0 left-0 right-0 z-20 bg-[#F2F2F2] shadow">
-                <AfterLoginNav
-                    profileCapture={user?.foto_profil
-                        ? user.foto_profil.startsWith('http')
-                            ? user.foto_profil
-                            : `http://localhost:3000${user.foto_profil}`
-                        : '/default-avatar.png'}
-                    sidebarToggle={sidebarToggle}
-                    isSidebarOpen={isSidebarOpen}
-                    toggleButtonRef={toggleButtonRef}
-                />
+                <NavBar />
             </header>
 
             <main className="flex lg:ml-[350px] pt-24 h-screen">
@@ -131,7 +124,17 @@ export default function QuestionsListWithoutLogin() {
                     `}
                 >
                     <button
-                        onClick={() => setIsOpen(prevValue => !prevValue)}
+                        onClick={() => {
+                            const token = localStorage.getItem('TOKEN')
+                            if (!token) {
+                                toast.error('Silakan login terlebih dahulu untuk tambah pertanyaan.', {
+                                    position: 'top-center',
+                                    autoClose: 2000
+                                })
+                                return
+                            }
+                            setIsOpen(prevValue => !prevValue)
+                        }}
                         className="mb-4 border rounded-xl bg-[#2C448C] w-fit py-2 px-3 text-center text-white font-bold"
                     >
                         Tambah Pertanyaan

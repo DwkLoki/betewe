@@ -12,6 +12,7 @@ import AfterLoginNav from '../components/AfterLoginNav'
 import AddAnswerModal from '../components/AddAnswerModal'
 import EditAnswerModal from '../components/EditAnswerModal'
 import axios from 'axios'
+import NavBar from '../components/NavBar'
 
 export default function QuestionDetails() {
     const [user, setUser] = useState(null)
@@ -314,15 +315,21 @@ export default function QuestionDetails() {
     return (
         <section>
             <header className="fixed top-0 left-0 right-0 z-20 bg-[#F2F2F2] shadow">
-                <AfterLoginNav
-                    profileCapture={
-                        user?.foto_profil
-                            ? user?.foto_profil.startsWith('http')
-                                ? user?.foto_profil
-                                : `http://localhost:3000${user?.foto_profil}`
-                            : '/default-avatar.png'
-                    }
-                />
+                {
+                    user ? (
+                        <AfterLoginNav
+                            profileCapture={
+                                user?.foto_profil
+                                    ? user?.foto_profil.startsWith('http')
+                                        ? user?.foto_profil
+                                        : `http://localhost:3000${user?.foto_profil}`
+                                    : '/default-avatar.png'
+                            }
+                        />
+                    ) : (
+                        <NavBar />
+                    )
+                }
             </header>
 
             <main className='flex flex-col fixed top-20 pt-8 items-center w-full h-[calc(100vh-80px)] overflow-y-auto'>
@@ -394,7 +401,17 @@ export default function QuestionDetails() {
 
                                 <div className='w-[80px] flex justify-end'>
                                     <button
-                                        onClick={() => setIsOpen(prevValue => !prevValue)}
+                                        onClick={() => {
+                                            const token = localStorage.getItem('TOKEN')
+                                            if (!token) {
+                                                toast.error('Silakan login terlebih dahulu untuk jawab pertanyaan.', {
+                                                    position: 'top-center',
+                                                    autoClose: 2000
+                                                })
+                                                return
+                                            }
+                                            setIsOpen(prevValue => !prevValue)
+                                        }}
                                         className='bg-[#2C448C] w-full h-[30px] text-white rounded-xl'
                                     >
                                         Jawab

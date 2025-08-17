@@ -16,6 +16,7 @@ import QuestionLayout from './routes/QuestionLayout.jsx';
 import EditProfile from './routes/EditProfile.jsx';
 import ChangePassword from './routes/ChangePassword.jsx';
 import ProfileSetting from './routes/ProfileSetting.jsx';
+import QuestionsListWithoutLogin from './routes/QuestionsListWithoutLogin.jsx';
 
 const router = createBrowserRouter([
     {
@@ -100,7 +101,7 @@ const router = createBrowserRouter([
             },
             {
                 path: '/questions',
-                element: <h1>Halo ini daftar pertanyaan</h1>
+                element: <QuestionsListWithoutLogin />
             }
         ]
     }
