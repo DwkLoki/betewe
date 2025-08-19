@@ -1,27 +1,195 @@
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
-import {
-    INSERT_ORDERED_LIST_COMMAND,
-    INSERT_UNORDERED_LIST_COMMAND,
-} from '@lexical/list'
-import {
-    $createParagraphNode,
-    $getSelection,
-    $isRangeSelection,
-    FORMAT_TEXT_COMMAND,
-    $createTextNode,
-    INSERT_PARAGRAPH_COMMAND
-} from 'lexical'
-import { $wrapNodes } from '@lexical/selection'
+import { $createHeadingNode, HeadingNode } from '@lexical/rich-text';
+import { $setBlocksType } from '@lexical/selection';
+import { FORMAT_TEXT_COMMAND, $getSelection, $isRangeSelection } from 'lexical'
+import { 
+    Heading, 
+    Bold, 
+    Italic, 
+    Link, 
+    Image, 
+    List, 
+    ListOrdered, 
+    ChevronDown 
+} from 'lucide-react';
+import { useState, useCallback, useEffect } from 'react';
 
-export default function Toolbar() {
+export default function LexicalToolbar() {
     const [editor] = useLexicalComposerContext()
+    const [isHeadingOpen, setIsHeadingOpen] = useState(false);
+    const [isBold, setIsBold] = useState(false);
+    const [isItalic, setIsItalic] = useState(false);
+    const [activeBlockType, setActiveBlockType] = useState(null);
+
+    const $updateToolbar = useCallback(() => {
+        const selection = $getSelection();
+        if ($isRangeSelection(selection)) {
+            // Update text format
+            setIsBold(selection.hasFormat('bold'));
+            setIsItalic(selection.hasFormat('italic'));
+
+            // cek block type (heading atau paragraph)
+            const anchorNode = selection.anchor.getNode();
+            const element = anchorNode.getTopLevelElementOrThrow();
+            if (element instanceof HeadingNode) {
+                setActiveBlockType(element.getTag()); // 'h1' | 'h2' | 'h3'
+            } else {
+                setActiveBlockType('paragraph');
+            }
+        }
+    }, []);
+
+    useEffect(() => {
+        editor.registerUpdateListener(({ editorState }) => {
+            editorState.read(() => {
+                $updateToolbar();
+            });
+        })
+    }, [editor, $updateToolbar]);
+
+    const handleHeading = (tag) => {
+        editor.update(() => {
+            const selection = $getSelection();
+            if ($isRangeSelection(selection)) {
+                // Update block type antara Heading || paragraph
+                if (activeBlockType === tag) {
+                    // kalau tag sama -> reset ke paragraph
+                    $setBlocksType(selection, () => $createHeadingNode('paragraph'));
+                    setActiveBlockType('paragraph');
+                } else {
+                    // kalau beda -> set heading baru
+                    $setBlocksType(selection, () => $createHeadingNode(tag));
+                    setActiveBlockType(tag);
+                }
+            }
+        })
+
+        // tutup popover heading list
+        setIsHeadingOpen(prev => !prev) 
+    }
 
     return (
-        <div className="mb-2 flex gap-2 border-b pb-2">
-            <button onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')} className="font-bold">B</button>
+        <div className="mb-2 flex gap-1 border-b-2 border-red-400 pb-1">
+            {/* button heading */}
+            <div className='relative'>
+                {/* Button */}
+                <button 
+                    onClick={() => setIsHeadingOpen(prev => !prev)}
+                    title='Heading (Ctrl+H)'
+                    className={`flex justify-center items-center hover:bg-[#84ACF8] rounded-md p-1 ${['h1', 'h2', 'h3'].includes(activeBlockType) ? 'bg-[#84ACF8] text-[#2C448C]' : ''}`}
+                >
+                    <Heading size={20} strokeWidth={2} />
+                    <ChevronDown size={15} strokeWidth={2} />
+                </button>
+
+                {/* Popup rata kiri */}
+                {isHeadingOpen && (
+                    <div className="absolute w-28 left-0 top-full bg-white shadow-xl py-[12px] px-2 rounded-md border border-[#d4d4d4] mt-3">
+                        {/* Arrow */}
+                        <div className="absolute -top-[8px] left-4">
+                            <div className="w-4 h-4 bg-white rotate-45 border-l border-t border-[#d4d4d4]"></div>
+                        </div>
+
+                        <button 
+                            onClick={() => handleHeading('h1')}
+                            title='Klik untuk memilih/membatalkan'
+                            className={`cursor-pointer hover:bg-[#BCBCBC] p-1 rounded-lg text-lg ${activeBlockType === 'h1' ? 'bg-[#84ACF8] text-[#2C448C]' : ''}`}
+                        >
+                            Heading 1
+                        </button>
+                        <button 
+                            onClick={() => handleHeading('h2')}
+                            title='Klik untuk memilih/membatalkan'
+                            className={`cursor-pointer hover:bg-[#BCBCBC] p-1 rounded-lg text-base ${activeBlockType === 'h2' ? 'bg-[#84ACF8] text-[#2C448C]' : ''}`}
+                        >
+                            Heading 2
+                        </button>
+                        <button 
+                            onClick={() => handleHeading('h3')}
+                            title='Klik untuk memilih/membatalkan'
+                            className={`cursor-pointer hover:bg-[#BCBCBC] p-1 rounded-lg text-sm ${activeBlockType === 'h3' ? 'bg-[#84ACF8] text-[#2C448C]' : ''}`}
+                        >
+                            Heading 3
+                        </button>
+                    </div>
+                )}
+            </div>
+
+            {/* button bold */}
+            <button
+                onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')}
+                title='Bold (Ctrl+B)'
+                className={`hover:bg-[#84ACF8] rounded-md p-1 ${isBold ? 'bg-[#84ACF8]' : ''}`}
+            >
+                <Bold size={20} strokeWidth={2} color={isBold ? '#2C448C' : 'black'}/>
+            </button>
+
+            {/* button italic */}
+            <button
+                onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic')}
+                title='Italic (Ctrl+I)'
+                className={`hover:bg-[#84ACF8] rounded-md p-1 ${isItalic ? 'bg-[#84ACF8]' : ''}`}
+            >
+                <Italic size={20} strokeWidth={2} color={isItalic ? '#2C448C' : 'black'} />
+            </button>
+
+            {/* button insert link */}
+            <button
+                onClick={() => setIsHeadingOpen(prev => !prev)}
+                title='Link (Ctrl+L)'
+                className='hover:bg-[#84ACF8] rounded-md p-1'
+            >
+                <Link size={20} strokeWidth={2} />
+            </button>
+
+            {/* button insert image */}
+            <button
+                onClick={() => setIsHeadingOpen(prev => !prev)}
+                title='Insert Image (Ctrl+G)'
+                className='hover:bg-[#84ACF8] rounded-md p-1'
+            >
+                <Image size={20} strokeWidth={2} />
+            </button>
+
+            {/* button insert ul */}
+            <button
+                onClick={() => setIsHeadingOpen(prev => !prev)}
+                title='Bulleted List (Ctrl+U)'
+                className='hover:bg-[#84ACF8] rounded-md p-1'
+            >
+                <List size={20} strokeWidth={2} />
+            </button>
+
+            {/* button insert ol */}
+            <button
+                onClick={() => setIsHeadingOpen(prev => !prev)}
+                title='Numbered List (Ctrl+O)'
+                className='hover:bg-[#84ACF8] rounded-md p-1'
+            >
+                <ListOrdered size={20} strokeWidth={2} />
+            </button>
+
+            {/* <button onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')} className="font-bold">B</button>
             <button onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic')} className="italic">I</button>
             <button onClick={() => editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND)}>1.</button>
-            <button onClick={() => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND)}>•</button>
+            <button onClick={() => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND)}>•</button> */}
         </div>
     )
 }
+
+
+{/* Popup tengah */ }
+// {
+//     isHeadingOpen && (
+//         <div className="absolute w-28 left-1/2 -translate-x-1/2 top-full mt-3 bg-white shadow-xl rounded-md border border-[#d4d4d4]">
+
+//             {/* Arrow */}
+//             <div className="absolute -top-2 left-1/2 -translate-x-1/2 w-4 h-4 bg-white border-l border-t border-[#d4d4d4] rotate-45"></div>
+
+//             {/* Content */}
+//             <div className='cursor-pointer hover:bg-[#BCBCBC] p-1 rounded-lg text-lg'>Heading 1</div>
+//             <div className='cursor-pointer hover:bg-[#BCBCBC] p-1 rounded-lg text-base'>Heading 2</div>
+//             <div className='cursor-pointer hover:bg-[#BCBCBC] p-1 rounded-lg text-sm'>Heading 3</div>
+//         </div>
+//     )
+// }

@@ -1,5 +1,6 @@
 import NavBar from "../components/NavBar";
 import registerPoster from '../assets/images/register-poster.jpg'
+import LexicalEditor from "../components/LexicalEditor";
 
 export default function AboutUs() {
     return (
@@ -38,6 +39,10 @@ export default function AboutUs() {
                             sekaligus mengembangkan kembali dengan teknologi yang lebih relevan dan modern agar sesuai dengan kebutuhan saat ini.
                         </p>
                     </div>
+                </section>
+
+                <section className="flex w-full justify-center">
+                    <LexicalEditor />
                 </section>
             </main>
 
