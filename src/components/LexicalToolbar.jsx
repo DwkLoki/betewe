@@ -15,6 +15,7 @@ import {
     ChevronDown 
 } from 'lucide-react';
 import { useState, useCallback, useEffect } from 'react';
+import { INSERT_IMAGE_COMMAND } from "./ImagePlugin";
 
 export default function LexicalToolbar() {
     const [editor] = useLexicalComposerContext()
@@ -148,7 +149,15 @@ export default function LexicalToolbar() {
 
             {/* button insert image */}
             <button
-                onClick={() => setIsHeadingOpen(prev => !prev)}
+                onClick={() => {
+                    const url = prompt("Masukkan URL gambar:");
+                    if (url) {
+                        editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
+                            src: url,
+                            alt: "image"
+                        });
+                    }
+                }}
                 title='Insert Image (Ctrl+G)'
                 className='hover:bg-[#84ACF8] rounded-md p-1'
             >

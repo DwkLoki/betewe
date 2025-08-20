@@ -63,6 +63,8 @@ import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import LexicalToolbar from './LexicalToolbar';
 import { HeadingNode } from '@lexical/rich-text';
 import { ListItemNode, ListNode } from '@lexical/list';
+import { ImageNode } from './ImageNode';
+import ImagePlugin from './ImagePlugin';
 // import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
 
 const theme = {
@@ -76,7 +78,7 @@ const theme = {
         h3: "text-xl font-semibold mb-2",
     },
     list: {
-        ol: "ml-6",
+        ol: "list-decimal ml-6",
         ul: "list-disc ml-6",
         listitem: "my-1",
         nested: {
@@ -138,7 +140,7 @@ export default function LexicalEditor() {
         namespace: 'MyEditor',
         theme,
         onError,
-        nodes: [HeadingNode, ListNode, ListItemNode],
+        nodes: [HeadingNode, ListNode, ListItemNode, ImageNode],
     };
 
     return (
@@ -156,6 +158,7 @@ export default function LexicalEditor() {
                 <HistoryPlugin />
                 <AutoFocusPlugin />
                 <ListPlugin />
+                <ImagePlugin />
 
                 {/* biar bisa tab untuk kasi indent */}
                 {/* <TabIndentationPlugin />  */}
