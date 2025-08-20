@@ -12,20 +12,46 @@ export default function ImagePlugin() {
         return editor.registerCommand(
             INSERT_IMAGE_COMMAND,
             (payload) => {
-                const { src, alt } = payload;
-                editor.update(() => {
-                    const selection = $getSelection();
-                    const imageNode = $createImageNode({ src, alt });
+                const { src, alt } = payload;                
+                // preload image to get natural size
+                const img = new Image();
+                img.src = src;
 
-                    if ($isRangeSelection(selection)) {
-                        // insert di posisi caret
-                        selection.insertNodes([imageNode]);
-                    } else {
-                        // fallback: append ke root
-                        const root = editor.getRootElement();
-                        root?.appendChild(document.createTextNode("")); // jaga supaya tidak null
+                img.onload = () => {
+                    const { naturalWidth, naturalHeight } = img;
+
+                    // ambil ukuran editor
+                    const editorRoot = editor.getRootElement();
+                    const editorWidth = editorRoot ? editorRoot.clientWidth : 600; // fallback
+
+                    let finalWidth = naturalWidth;
+                    let finalHeight = naturalHeight;
+
+                    // scale down proporsional kalau gambar lebih lebar dari editor
+                    if (naturalWidth > editorWidth) {
+                        const scale = editorWidth / naturalWidth;
+                        finalWidth = editorWidth;
+                        finalHeight = Math.round(naturalHeight * scale);
                     }
-                });
+
+                    editor.update(() => {
+                        const selection = $getSelection();
+                        const imageNode = $createImageNode({
+                            src,
+                            alt,
+                            width: finalWidth,
+                            height: finalHeight,
+                        });
+
+                        if ($isRangeSelection(selection)) {
+                            selection.insertNodes([imageNode]);
+                        }
+                    });
+                };
+
+                img.onerror = () => {
+                    console.warn("Gagal load gambar:", src);
+                };
                 return true;
             },
             0

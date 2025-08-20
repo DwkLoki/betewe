@@ -150,13 +150,23 @@ export default function LexicalToolbar() {
             {/* button insert image */}
             <button
                 onClick={() => {
-                    const url = prompt("Masukkan URL gambar:");
-                    if (url) {
-                        editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-                            src: url,
-                            alt: "image"
-                        });
-                    }
+                    // buat elemen input file
+                    const input = document.createElement("input");
+                    input.type = "file";
+                    input.accept = "image/*";
+
+                    input.onchange = () => {
+                        const file = input.files?.[0];
+                        if (file) {
+                            const url = URL.createObjectURL(file);
+                            editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
+                                src: url,
+                                alt: file.name || "image",
+                            });
+                        }
+                    };
+
+                    input.click();
                 }}
                 title='Insert Image (Ctrl+G)'
                 className='hover:bg-[#84ACF8] rounded-md p-1'
