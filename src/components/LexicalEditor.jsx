@@ -58,9 +58,12 @@ import { LexicalComposer } from '@lexical/react/LexicalComposer';
 import { RichTextPlugin } from '@lexical/react/LexicalRichTextPlugin';
 import { ContentEditable } from '@lexical/react/LexicalContentEditable';
 import { HistoryPlugin } from '@lexical/react/LexicalHistoryPlugin';
+import { ListPlugin } from '@lexical/react/LexicalListPlugin';
 import { LexicalErrorBoundary } from '@lexical/react/LexicalErrorBoundary';
 import LexicalToolbar from './LexicalToolbar';
 import { HeadingNode } from '@lexical/rich-text';
+import { ListItemNode, ListNode } from '@lexical/list';
+// import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
 
 const theme = {
     ltr: 'ltr',
@@ -73,14 +76,12 @@ const theme = {
         h3: "text-xl font-semibold mb-2",
     },
     list: {
-        nested: {
-            listitem: 'editor-nested-listitem',
-        },
-        ol: "list-decimal ml-6",
+        ol: "ml-6",
         ul: "list-disc ml-6",
         listitem: "my-1",
-        listitemChecked: 'editor-listItemChecked',
-        listitemUnchecked: 'editor-listItemUnchecked',
+        nested: {
+            listitem: 'ml-6',
+        },
     },
     hashtag: 'editor-hashtag',
     image: 'editor-image',
@@ -137,7 +138,7 @@ export default function LexicalEditor() {
         namespace: 'MyEditor',
         theme,
         onError,
-        nodes: [HeadingNode],
+        nodes: [HeadingNode, ListNode, ListItemNode],
     };
 
     return (
@@ -147,14 +148,17 @@ export default function LexicalEditor() {
                 <RichTextPlugin
                     contentEditable={
                         <ContentEditable
-                            aria-placeholder={'Enter some text...'}
-                            placeholder={<div>Enter some text...</div>}
+                            className='focus:outline-none'
                         />
                     }
                     ErrorBoundary={LexicalErrorBoundary}
                 />
                 <HistoryPlugin />
                 <AutoFocusPlugin />
+                <ListPlugin />
+
+                {/* biar bisa tab untuk kasi indent */}
+                {/* <TabIndentationPlugin />  */}
             </div>
         </LexicalComposer>
     );

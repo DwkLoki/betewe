@@ -1,3 +1,5 @@
+import { INSERT_ORDERED_LIST_COMMAND, INSERT_UNORDERED_LIST_COMMAND } from '@lexical/list';
+import { ListNode } from '@lexical/list';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { $createHeadingNode, HeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
@@ -33,6 +35,8 @@ export default function LexicalToolbar() {
             const element = anchorNode.getTopLevelElementOrThrow();
             if (element instanceof HeadingNode) {
                 setActiveBlockType(element.getTag()); // 'h1' | 'h2' | 'h3'
+            } else if (element instanceof ListNode) {
+                setActiveBlockType(element.getListType()); // 'bullet' | 'number'
             } else {
                 setActiveBlockType('paragraph');
             }
@@ -153,20 +157,20 @@ export default function LexicalToolbar() {
 
             {/* button insert ul */}
             <button
-                onClick={() => setIsHeadingOpen(prev => !prev)}
+                onClick={() => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined)}
                 title='Bulleted List (Ctrl+U)'
-                className='hover:bg-[#84ACF8] rounded-md p-1'
+                className={`hover:bg-[#84ACF8] rounded-md p-1 ${activeBlockType === 'bullet' ? 'bg-[#84ACF8]' : ''}`}
             >
-                <List size={20} strokeWidth={2} />
+                <List size={20} strokeWidth={2} color={activeBlockType === 'bullet' ? '#2C448C' : 'black'} />
             </button>
 
             {/* button insert ol */}
             <button
-                onClick={() => setIsHeadingOpen(prev => !prev)}
+                onClick={() => editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined)}
                 title='Numbered List (Ctrl+O)'
-                className='hover:bg-[#84ACF8] rounded-md p-1'
+                className={`hover:bg-[#84ACF8] rounded-md p-1 ${activeBlockType === 'number' ? 'bg-[#84ACF8]' : ''}`}
             >
-                <ListOrdered size={20} strokeWidth={2} />
+                <ListOrdered size={20} strokeWidth={2} color={activeBlockType === 'number' ? '#2C448C' : 'black'} />
             </button>
 
             {/* <button onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')} className="font-bold">B</button>
