@@ -39,12 +39,12 @@
 //                 />
 //                 <HistoryPlugin />
 //                 <ListPlugin />
-//                 <OnChangePlugin onChange={(editorState) => {
-//                     editorState.read(() => {
-//                         const html = $getRoot().getTextContent()
-//                         onChange(html)
-//                     })
-//                 }} />
+                // <OnChangePlugin onChange={(editorState) => {
+                //     editorState.read(() => {
+                //         const html = $getRoot().getTextContent()
+                //         onChange(html)
+                //     })
+                // }} />
 //             </div>
 //         </LexicalComposer>
 //     )
@@ -68,6 +68,7 @@ import ImagePlugin from './ImagePlugin';
 import { LinkNode } from '@lexical/link';
 import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
 import FloatingLinkEditor from './FloatingLinkEditor';
+import { OnChangePlugin } from '@lexical/react/LexicalOnChangePlugin'
 // import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
 
 const theme = {
@@ -166,6 +167,18 @@ export default function LexicalEditor() {
                 <FloatingLinkEditor />
                 {/* biar bisa tab untuk kasi indent */}
                 {/* <TabIndentationPlugin />  */}
+
+                {/* <OnChangePlugin onChange={(editorState) => {
+                    console.log(editorState.toJSON())
+                }} /> */}
+                {/* <OnChangePlugin onChange={(editorState) => {
+                    editorState.read(() => {
+                        const html = $getRoot().getTextContent()
+                        const json = JSON.stringify($getRoot().exportJSON());
+                        console.log(html);
+                        
+                    })
+                }} /> */}
             </div>
         </LexicalComposer>
     );
