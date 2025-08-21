@@ -65,6 +65,9 @@ import { HeadingNode } from '@lexical/rich-text';
 import { ListItemNode, ListNode } from '@lexical/list';
 import { ImageNode } from './ImageNode';
 import ImagePlugin from './ImagePlugin';
+import { LinkNode } from '@lexical/link';
+import { LinkPlugin } from '@lexical/react/LexicalLinkPlugin';
+import FloatingLinkEditor from './FloatingLinkEditor';
 // import { TabIndentationPlugin } from '@lexical/react/LexicalTabIndentationPlugin';
 
 const theme = {
@@ -87,7 +90,7 @@ const theme = {
     },
     hashtag: 'editor-hashtag',
     image: 'editor-image',
-    link: "text-blue-600 underline",
+    link: "text-blue-600 underline cursor-pointer",
     text: {
         bold: "font-bold",
         italic: "italic",
@@ -140,7 +143,7 @@ export default function LexicalEditor() {
         namespace: 'MyEditor',
         theme,
         onError,
-        nodes: [HeadingNode, ListNode, ListItemNode, ImageNode],
+        nodes: [HeadingNode, ListNode, ListItemNode, ImageNode, LinkNode],
     };
 
     return (
@@ -159,7 +162,8 @@ export default function LexicalEditor() {
                 <AutoFocusPlugin />
                 <ListPlugin />
                 <ImagePlugin />
-
+                <LinkPlugin />
+                <FloatingLinkEditor />
                 {/* biar bisa tab untuk kasi indent */}
                 {/* <TabIndentationPlugin />  */}
             </div>

@@ -16,6 +16,9 @@ import {
 } from 'lucide-react';
 import { useState, useCallback, useEffect } from 'react';
 import { INSERT_IMAGE_COMMAND } from "./ImagePlugin";
+import { TOGGLE_LINK_COMMAND } from "@lexical/link";
+import { OPEN_LINK_EDITOR_COMMAND } from "./FloatingLinkEditor";
+import { LinkNode } from '@lexical/link';
 
 export default function LexicalToolbar() {
     const [editor] = useLexicalComposerContext()
@@ -23,6 +26,7 @@ export default function LexicalToolbar() {
     const [isBold, setIsBold] = useState(false);
     const [isItalic, setIsItalic] = useState(false);
     const [activeBlockType, setActiveBlockType] = useState(null);
+    const [isLink, setIsLink] = useState(false);
 
     const $updateToolbar = useCallback(() => {
         const selection = $getSelection();
@@ -40,6 +44,14 @@ export default function LexicalToolbar() {
                 setActiveBlockType(element.getListType()); // 'bullet' | 'number'
             } else {
                 setActiveBlockType('paragraph');
+            }
+
+            // cek link (inline node → cek parent)
+            const parent = anchorNode.getParent();
+            if (parent instanceof LinkNode) {
+                setIsLink(true);
+            } else {
+                setIsLink(false);
             }
         }
     }, []);
@@ -140,11 +152,45 @@ export default function LexicalToolbar() {
 
             {/* button insert link */}
             <button
-                onClick={() => setIsHeadingOpen(prev => !prev)}
+                // onClick={() => {
+                //     editor.update(() => {
+                //         const selection = $getSelection();
+                //         if ($isRangeSelection(selection) && !selection.isCollapsed()) {
+                //             // langsung jadikan link dengan default "https://"
+                //             editor.dispatchCommand(TOGGLE_LINK_COMMAND, "https://");
+                //             // buka popover supaya user bisa edit URL
+                //             editor.dispatchCommand(OPEN_LINK_EDITOR_COMMAND, true);
+                //         } else {
+                //             // kalau tidak ada teks terseleksi, jangan lakukan apa-apa
+                //             console.log("Harus blok teks dulu untuk membuat link");
+                //         }
+                //     });
+                // }}
+                onClick={() => {
+                    editor.update(() => {
+                        const selection = $getSelection();
+                        if ($isRangeSelection(selection)) {
+                            const node = selection.anchor.getNode();
+                            const parent = node.getParent();
+
+                            if (parent && parent.getType() === "link") {
+                                // 👉 kalau cursor ada di dalam link (collapsed atau diblok) → hapus link
+                                editor.dispatchCommand(TOGGLE_LINK_COMMAND, null);
+                            } else if (!selection.isCollapsed()) {
+                                // 👉 kalau teks biasa diblok → buat link baru
+                                editor.dispatchCommand(TOGGLE_LINK_COMMAND, "https://");
+                                editor.dispatchCommand(OPEN_LINK_EDITOR_COMMAND, true);
+                            } else {
+                                // ❌ kalau tidak ada teks terseleksi & bukan di dalam link → tidak lakukan apa-apa
+                                console.log("Harus blok teks untuk membuat link baru");
+                            }
+                        }
+                    });
+                }}
                 title='Link (Ctrl+L)'
-                className='hover:bg-[#84ACF8] rounded-md p-1'
+                className={`hover:bg-[#84ACF8] rounded-md p-1 ${isLink ? "bg-[#84ACF8]" : ""}`}
             >
-                <Link size={20} strokeWidth={2} />
+                <Link size={20} strokeWidth={2} color={isLink ? '#2C448C' : 'black'} />
             </button>
 
             {/* button insert image */}
@@ -191,11 +237,6 @@ export default function LexicalToolbar() {
             >
                 <ListOrdered size={20} strokeWidth={2} color={activeBlockType === 'number' ? '#2C448C' : 'black'} />
             </button>
-
-            {/* <button onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')} className="font-bold">B</button>
-            <button onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic')} className="italic">I</button>
-            <button onClick={() => editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND)}>1.</button>
-            <button onClick={() => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND)}>•</button> */}
         </div>
     )
 }
