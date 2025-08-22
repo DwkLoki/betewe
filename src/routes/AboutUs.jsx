@@ -40,10 +40,6 @@ export default function AboutUs() {
                         </p>
                     </div>
                 </section>
-
-                <section className="flex w-full justify-center">
-                    <LexicalEditor />
-                </section>
             </main>
 
             <footer className='h-[150px] bg-[#2C448C] text-white flex flex-col justify-center items-center px-5 text-center gap-2'>

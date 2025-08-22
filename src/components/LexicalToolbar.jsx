@@ -3,7 +3,7 @@ import { ListNode } from '@lexical/list';
 import { useLexicalComposerContext } from '@lexical/react/LexicalComposerContext'
 import { $createHeadingNode, HeadingNode } from '@lexical/rich-text';
 import { $setBlocksType } from '@lexical/selection';
-import { FORMAT_TEXT_COMMAND, $getSelection, $isRangeSelection } from 'lexical'
+import { FORMAT_TEXT_COMMAND, $getSelection, $isRangeSelection, $createParagraphNode } from 'lexical'
 import { 
     Heading, 
     Bold, 
@@ -71,7 +71,7 @@ export default function LexicalToolbar() {
                 // Update block type antara Heading || paragraph
                 if (activeBlockType === tag) {
                     // kalau tag sama -> reset ke paragraph
-                    $setBlocksType(selection, () => $createHeadingNode('paragraph'));
+                    $setBlocksType(selection, () => $createParagraphNode());
                     setActiveBlockType('paragraph');
                 } else {
                     // kalau beda -> set heading baru
@@ -86,11 +86,12 @@ export default function LexicalToolbar() {
     }
 
     return (
-        <div className="mb-2 flex gap-1 border-b-2 border-red-400 pb-1">
+        <div className="mb-2 flex gap-1 border-b pb-1">
             {/* button heading */}
             <div className='relative'>
                 {/* Button */}
                 <button 
+                    type='button'
                     onClick={() => setIsHeadingOpen(prev => !prev)}
                     title='Heading (Ctrl+H)'
                     className={`flex justify-center items-center hover:bg-[#84ACF8] rounded-md p-1 ${['h1', 'h2', 'h3'].includes(activeBlockType) ? 'bg-[#84ACF8] text-[#2C448C]' : ''}`}
@@ -108,6 +109,7 @@ export default function LexicalToolbar() {
                         </div>
 
                         <button 
+                            type='button'
                             onClick={() => handleHeading('h1')}
                             title='Klik untuk memilih/membatalkan'
                             className={`cursor-pointer hover:bg-[#BCBCBC] p-1 rounded-lg text-lg ${activeBlockType === 'h1' ? 'bg-[#84ACF8] text-[#2C448C]' : ''}`}
@@ -115,6 +117,7 @@ export default function LexicalToolbar() {
                             Heading 1
                         </button>
                         <button 
+                            type='button'
                             onClick={() => handleHeading('h2')}
                             title='Klik untuk memilih/membatalkan'
                             className={`cursor-pointer hover:bg-[#BCBCBC] p-1 rounded-lg text-base ${activeBlockType === 'h2' ? 'bg-[#84ACF8] text-[#2C448C]' : ''}`}
@@ -122,6 +125,7 @@ export default function LexicalToolbar() {
                             Heading 2
                         </button>
                         <button 
+                            type='button'
                             onClick={() => handleHeading('h3')}
                             title='Klik untuk memilih/membatalkan'
                             className={`cursor-pointer hover:bg-[#BCBCBC] p-1 rounded-lg text-sm ${activeBlockType === 'h3' ? 'bg-[#84ACF8] text-[#2C448C]' : ''}`}
@@ -134,6 +138,7 @@ export default function LexicalToolbar() {
 
             {/* button bold */}
             <button
+                type='button'
                 onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'bold')}
                 title='Bold (Ctrl+B)'
                 className={`hover:bg-[#84ACF8] rounded-md p-1 ${isBold ? 'bg-[#84ACF8]' : ''}`}
@@ -143,6 +148,7 @@ export default function LexicalToolbar() {
 
             {/* button italic */}
             <button
+                type='button'
                 onClick={() => editor.dispatchCommand(FORMAT_TEXT_COMMAND, 'italic')}
                 title='Italic (Ctrl+I)'
                 className={`hover:bg-[#84ACF8] rounded-md p-1 ${isItalic ? 'bg-[#84ACF8]' : ''}`}
@@ -166,6 +172,7 @@ export default function LexicalToolbar() {
                 //         }
                 //     });
                 // }}
+                type='button'
                 onClick={() => {
                     editor.update(() => {
                         const selection = $getSelection();
@@ -195,6 +202,7 @@ export default function LexicalToolbar() {
 
             {/* button insert image */}
             <button
+                type='button'
                 onClick={() => {
                     // buat elemen input file
                     const input = document.createElement("input");
@@ -222,6 +230,7 @@ export default function LexicalToolbar() {
 
             {/* button insert ul */}
             <button
+                type='button'
                 onClick={() => editor.dispatchCommand(INSERT_UNORDERED_LIST_COMMAND, undefined)}
                 title='Bulleted List (Ctrl+U)'
                 className={`hover:bg-[#84ACF8] rounded-md p-1 ${activeBlockType === 'bullet' ? 'bg-[#84ACF8]' : ''}`}
@@ -231,6 +240,7 @@ export default function LexicalToolbar() {
 
             {/* button insert ol */}
             <button
+                type='button'
                 onClick={() => editor.dispatchCommand(INSERT_ORDERED_LIST_COMMAND, undefined)}
                 title='Numbered List (Ctrl+O)'
                 className={`hover:bg-[#84ACF8] rounded-md p-1 ${activeBlockType === 'number' ? 'bg-[#84ACF8]' : ''}`}

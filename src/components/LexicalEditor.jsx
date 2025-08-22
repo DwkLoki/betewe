@@ -139,7 +139,7 @@ function onError(error) {
     console.error(error);
 }
 
-export default function LexicalEditor() {
+export default function LexicalEditor(props) {
     const initialConfig = {
         namespace: 'MyEditor',
         theme,
@@ -149,7 +149,7 @@ export default function LexicalEditor() {
 
     return (
         <LexicalComposer initialConfig={initialConfig}>
-            <div className="border-2 border-red-400 w-1/2 rounded-md p-2">
+            <div className="border w-full rounded-md p-2">
                 <LexicalToolbar />
                 <RichTextPlugin
                     contentEditable={
@@ -168,9 +168,16 @@ export default function LexicalEditor() {
                 {/* biar bisa tab untuk kasi indent */}
                 {/* <TabIndentationPlugin />  */}
 
-                {/* <OnChangePlugin onChange={(editorState) => {
-                    console.log(editorState.toJSON())
-                }} /> */}
+                <OnChangePlugin 
+                    onChange={(editorState) => {
+                        editorState.read(() => {
+                            const json = editorState.toJSON();
+                            if (props.onChange) {
+                                props.onChange(json); // kirim balik ke parent
+                            }
+                        });
+                    }}
+                />
                 {/* <OnChangePlugin onChange={(editorState) => {
                     editorState.read(() => {
                         const html = $getRoot().getTextContent()

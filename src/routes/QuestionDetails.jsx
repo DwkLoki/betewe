@@ -13,10 +13,12 @@ import AddAnswerModal from '../components/AddAnswerModal'
 import EditAnswerModal from '../components/EditAnswerModal'
 import axios from 'axios'
 import NavBar from '../components/NavBar'
+import LexicalViewer from '../components/LexicalViewer'
 
 export default function QuestionDetails() {
     const [user, setUser] = useState(null)
-    const [questionDetail, setQuestionDetail] = useState({})
+    const [questionDetail, setQuestionDetail] = useState(null)
+    const [isLoading, setIsLoading] = useState(true);
     const [isOpen, setIsOpen] = useState(false)
     const [isEditOpen, setIsEditOpen] = useState(false)
     const questionId = useParams()
@@ -50,12 +52,33 @@ export default function QuestionDetails() {
     };
 
     const getQuestionDetail = async () => {
+        setIsLoading(true);
         try {
             const response = await axios.get(`http://localhost:3000/api/questions/${questionId.id}`)
             setQuestionDetail(response.data);
+            setIsLoading(false);
         } catch (err) {
             console.log(err);
+            setIsLoading(false);
         }
+    }
+
+    // ✅ Tambahkan kondisi rendering di sini
+    if (isLoading) {
+        return <div className="flex justify-center items-center h-screen">Memuat detail pertanyaan...</div>;
+    }
+
+    if (!questionDetail) {
+        return <div className="flex justify-center items-center h-screen">Pertanyaan tidak ditemukan.</div>;
+    }
+
+    // ✅ Lakukan parsing di sini, setelah data dipastikan ada
+    let parsedContent = null;
+    try {
+        parsedContent = JSON.parse(questionDetail.content);
+    } catch (e) {
+        console.error("Gagal mengurai konten JSON:", e);
+        return <div className="flex justify-center items-center h-screen">Terjadi kesalahan saat menampilkan konten.</div>;
     }
 
     const upvoteQuestion = async () => {
@@ -310,7 +333,7 @@ export default function QuestionDetails() {
         }
     }
 
-    // console.log(questionDetail)
+    console.log('question detail:', questionDetail)
 
     return (
         <section>
@@ -373,7 +396,9 @@ export default function QuestionDetails() {
                                 {questionDetail.title}
                             </p>
 
-                            <p>{questionDetail.content}</p>
+                            {/* <p>{questionDetail.content}</p> */}
+                            {parsedContent && <LexicalViewer content={parsedContent} />}
+                            {/* <LexicalViewer content={JSON.parse(questionDetail.content)} /> */}
 
                             <div className='flex gap-4'>
                                 <div className='flex-1'>

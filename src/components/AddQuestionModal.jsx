@@ -4,6 +4,7 @@ import { CircleAlert } from 'lucide-react';
 import { ClipLoader } from "react-spinners";
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import LexicalEditor from './LexicalEditor';
 
 export default function AddQuestionModal(props) {
     // const [isOpen, setIsOpen] = useState(false)
@@ -13,7 +14,7 @@ export default function AddQuestionModal(props) {
         categoryQuery: '',
         // categories: []
     })
-    // console.log(formData);
+    console.log('Data form:', formData);
     // const [query, setQuery] = useState('')
     const [selectedTags, setSelectedTags] = useState([])
     const [filteredTags, setFilteredTags] = useState([])
@@ -138,7 +139,7 @@ export default function AddQuestionModal(props) {
                     <DialogPanel className="w-11/12 h-5/6 rounded-3xl bg-white p-0 z-50 overflow-hidden">
                         <div className="md:px-10 md:py-7 px-5 py-3 space-y-6 mr-3 h-full overflow-y-auto">
                             <form className='flex flex-col space-y-6'>
-                                <label className='font-bold'>
+                                <label className='font-bold text-base'>
                                     Judul Pertanyaan
                                     <div className='font-normal text-xs text-gray-600'>Tulis pertanyaanmu secara spesifik dan bayangkan Anda sedang mengajukan pertanyaan kepada orang lain.</div>
                                     <input
@@ -151,18 +152,30 @@ export default function AddQuestionModal(props) {
                                     />
                                 </label>
 
-                                <label className='font-bold'>
+                                {/* <label className='font-bold'>
                                     Detail Pertanyaan
-                                    <div className='font-normal text-xs text-gray-600'>Jelaskan lebih lengkap dari apa yang kamu tulis di judul.</div>
+                                    <div className='font-normal text-xs text-gray-600 mb-2'>Jelaskan lebih lengkap dari apa yang kamu tulis di judul.</div>
                                     <textarea
                                         className='w-full min-h-52 font-normal px-4 py-3 border focus:outline-[#2C448C] rounded mt-2'
                                         name='content'
                                         value={formData.content}
                                         onChange={handleInputChange}
                                     />
-                                </label>
+                                </label> */}
 
-                                <label className="font-bold">
+                                <div>
+                                    <div className='font-bold text-base'>Detail Pertanyaan</div>
+                                    <div className='font-normal text-xs text-gray-600 mb-2'>Jelaskan lebih lengkap dari apa yang kamu tulis di judul.</div>
+                                    <LexicalEditor onChange={(json) => {
+                                            setFormData((prev) => ({
+                                                ...prev,
+                                                content: JSON.stringify(json), // simpan sebagai string JSON
+                                            }));
+                                        }} 
+                                    />
+                                </div>
+
+                                <label className="font-bold text-base">
                                     Kategori Pertanyaan
                                     <div className="font-normal text-xs text-gray-600 mb-2">
                                         Tambahkan hingga 5 kategori untuk menggambarkan topik pertanyaanmu.
