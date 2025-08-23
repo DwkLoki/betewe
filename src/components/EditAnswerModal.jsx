@@ -4,13 +4,14 @@ import { CircleAlert } from 'lucide-react';
 import { ClipLoader } from "react-spinners";
 import { toast } from 'react-toastify';
 import axios from 'axios';
+import LexicalEditor from './LexicalEditor';
 
 export default function EditAnswerModal(props) {
     const [answer, setAnswer] = useState(props.answer.content)
     const [isLoading, setIsLoading] = useState(false)
-    // console.log(answer);
+    console.log('jawaban harus string JSON:', answer);
 
-    const isContentEmpty = answer.trim() === '';
+    // const isContentEmpty = answer.trim() === '';
 
     const handleInputChange = (e) => {
         const { value } = e.target
@@ -21,7 +22,7 @@ export default function EditAnswerModal(props) {
     const editAnswer = async () => {
         const token = localStorage.getItem('TOKEN')
         const answerData = {
-            content: answer
+            content: JSON.stringify(answer)
         }
         const config = {
             headers: {
@@ -77,7 +78,7 @@ export default function EditAnswerModal(props) {
                     <DialogPanel className="w-11/12 h-5/6 rounded-3xl bg-white p-0 z-50 overflow-hidden">
                         <div className="md:px-10 md:py-7 px-5 py-3 space-y-6 mr-3 h-full overflow-y-auto">
                             <form className='flex flex-col space-y-6'>
-                                <label className='font-bold'>
+                                {/* <label className='font-bold'>
                                     Edit Jawaban
                                     <div className='font-normal text-xs text-gray-600'>Tulis jawabanmu secara jelas dan rinci. Sertakan penjelasan, contoh, atau referensi jika ada.</div>
                                     <textarea
@@ -85,7 +86,17 @@ export default function EditAnswerModal(props) {
                                         value={answer}
                                         onChange={handleInputChange}
                                     />
-                                </label>
+                                </label> */}
+                                <div>
+                                    <div className='font-bold text-base'>Edit Jawaban</div>
+                                    <div className='font-normal text-xs text-gray-600 mb-2'>Tulis jawabanmu secara jelas dan rinci. Sertakan penjelasan, contoh, atau referensi jika ada.</div>
+                                    <LexicalEditor 
+                                        initialContent={props.answer.content} 
+                                        onChange={(json) => {
+                                            setAnswer(json);
+                                        }}
+                                    />
+                                </div>
                             </form>
 
                             {/* <div className='flex px-3 py-2 text-yellow-700 border-2 border-yellow-500 bg-yellow-400 rounded'>
@@ -104,11 +115,15 @@ export default function EditAnswerModal(props) {
                                 <button
                                     type='button'
                                     onClick={handleSubmit}
-                                    disabled={isLoading || isContentEmpty}
+                                    disabled={isLoading}
                                     className={`
                                         flex justify-center items-center space-x-4 px-4 py-2 rounded-[15px] font-bold text-white bg-[#2C448C]
-                                        ${!isContentEmpty ? isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]' : 'bg-[#BCBCBC] cursor-not-allowed'}
+                                        ${isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]'}
                                     `}
+                                    // className={`
+                                    //     flex justify-center items-center space-x-4 px-4 py-2 rounded-[15px] font-bold text-white bg-[#2C448C]
+                                    //     ${!isContentEmpty ? isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]' : 'bg-[#BCBCBC] cursor-not-allowed'}
+                                    // `}
                                 >
                                     <ClipLoader
                                         color='white'

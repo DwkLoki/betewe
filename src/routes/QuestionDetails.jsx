@@ -25,6 +25,7 @@ export default function QuestionDetails() {
     const navigate = useNavigate()
     const closeModal = () => setIsOpen(false)
     const closeEditModal = () => setIsEditOpen(false)
+    const [editingAnswer, setEditingAnswer] = useState(null);
     // console.log(questionId)
 
     useEffect(() => {
@@ -494,7 +495,8 @@ export default function QuestionDetails() {
                                                     })
                                                     return
                                                 }
-                                                setIsEditOpen(prevValue => !prevValue)
+                                                // setIsEditOpen(prevValue => !prevValue)
+                                                setEditingAnswer(answer) // simpan jawaban yang diklik
                                             }}
                                             title='Edit jawaban'
                                         >
@@ -505,12 +507,12 @@ export default function QuestionDetails() {
                                 </header>
 
                                 {/* modal edit jawaban */}
-                                <EditAnswerModal
+                                {/* <EditAnswerModal
                                     answer={answer}
                                     isEditOpen={isEditOpen}
                                     closeEditModal={closeEditModal}
                                     refreshQuestion={getQuestionDetail}
-                                />
+                                /> */}
 
                                 <main className='flex w-full space-x-4 mt-6'>
                                     {/* bagian untuk vote */}
@@ -525,13 +527,24 @@ export default function QuestionDetails() {
                                     </div>
 
                                     {/* bagian jawaban */}
-                                    <div className='flex-1'>
-                                        <p>{answer.content}</p>
+                                    <div className='flex-1 overflow-x-hidden'>
+                                        <div className='w-full overflow-x-auto'>
+                                            <LexicalViewer content={JSON.parse(answer.content)} />
+                                        </div>
+                                        {/* <p>{answer.content}</p> */}
                                     </div>
                                 </main>
                             </div>
                         ))
                     }
+                    {editingAnswer && (
+                        <EditAnswerModal
+                            answer={editingAnswer}
+                            isEditOpen={!!editingAnswer}
+                            closeEditModal={() => setEditingAnswer(null)}
+                            refreshQuestion={getQuestionDetail}
+                        />
+                    )}
                 </div>
             </main>
         </section>

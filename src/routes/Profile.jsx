@@ -8,6 +8,7 @@ import AfterLoginNav from "../components/AfterLoginNav"
 import AddQuestionModal from "../components/AddQuestionModal";
 import notFoundImg from "../assets/images/not-found.png"
 import axios from "axios"
+import LexicalViewer from "../components/LexicalViewer";
 
 export default function Profile() {
     const [user, setUser] = useState(null)
@@ -285,11 +286,14 @@ export default function Profile() {
                                         </div>
 
                                         {/* bagian pertanyaan dan jawaban */}
-                                        <div className='flex-1 space-y-3'>
+                                        <div className='flex-1 space-y-3 overflow-x-hidden'>
                                             <Link to={`/question/${answer.Question.id}`} className='text-2xl font-bold hover:text-[#2C448C]'>
                                                 {answer.Question.title}
                                             </Link>
-                                            <p>{answer.content}</p>
+                                            <div className="w-full overflow-x-auto">
+                                                <LexicalViewer content={JSON.parse(answer.content)}/>
+                                            </div>
+                                            {/* <p>{answer.content}</p> */}
                                         </div>
                                     </main>
                                 </div>

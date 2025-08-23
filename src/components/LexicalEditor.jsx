@@ -87,17 +87,23 @@ function onError(error) {
     console.error(error);
 }
 
-export default function LexicalEditor({ onChange }) {
+export default function LexicalEditor({ onChange, initialContent }) {
     const initialConfig = {
         namespace: 'MyEditor',
         theme,
         onError,
         nodes: [HeadingNode, ListNode, ListItemNode, ImageNode, LinkNode],
+        editorState: (editor) => {
+            if (initialContent) {
+                const parsed = editor.parseEditorState(initialContent);
+                editor.setEditorState(parsed);
+            }
+        }
     };
 
     return (
         <LexicalComposer initialConfig={initialConfig}>
-            <div className="border w-full rounded-md p-2">
+            <div className="border w-full min-h-52 rounded-md p-2">
                 <LexicalToolbar />
                 <RichTextPlugin
                     contentEditable={

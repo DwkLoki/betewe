@@ -87,7 +87,7 @@ export default function LexicalToolbar() {
     }
 
     return (
-        <div className="mb-2 flex gap-1 border-b pb-1">
+        <div className="w-full mb-2 flex gap-1 border-b pb-1 overflow-x-auto">
             {/* button heading */}
             <div className='relative'>
                 {/* Button */}
