@@ -19,6 +19,7 @@ import { INSERT_IMAGE_COMMAND } from "./ImagePlugin";
 import { TOGGLE_LINK_COMMAND } from "@lexical/link";
 import { OPEN_LINK_EDITOR_COMMAND } from "./FloatingLinkEditor";
 import { LinkNode } from '@lexical/link';
+import axios from 'axios';
 
 export default function LexicalToolbar() {
     const [editor] = useLexicalComposerContext()
@@ -209,12 +210,38 @@ export default function LexicalToolbar() {
                     input.type = "file";
                     input.accept = "image/*";
 
-                    input.onchange = () => {
+                    // input.onchange = () => {
+                    //     const file = input.files?.[0];
+                    //     if (file) {
+                    //         const url = URL.createObjectURL(file);
+                    //         editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
+                    //             src: url,
+                    //             alt: file.name || "image",
+                    //         });
+                    //     }
+                    // };
+
+                    input.onchange = async () => {
+                        const token = localStorage.getItem('TOKEN')
                         const file = input.files?.[0];
                         if (file) {
-                            const url = URL.createObjectURL(file);
+                            // 1. Upload ke server
+                            const formData = new FormData();
+                            formData.append("image", file);
+
+                            const res = await axios.post("http://localhost:3000/api/auth/upload/content-image", formData, {
+                                headers: {
+                                    "Content-Type": "multipart/form-data",
+                                    "Authorization": `Bearer ${token}` // Jangan lupa sertakan token
+                                },
+                            });
+
+                            // 2. Ambil URL dari server
+                            const imageUrl = res.data.url;
+
+                            // 3. Insert ke Lexical
                             editor.dispatchCommand(INSERT_IMAGE_COMMAND, {
-                                src: url,
+                                src: `http://localhost:3000${imageUrl}`, // URL lengkap
                                 alt: file.name || "image",
                             });
                         }

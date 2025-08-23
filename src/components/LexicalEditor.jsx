@@ -139,7 +139,7 @@ function onError(error) {
     console.error(error);
 }
 
-export default function LexicalEditor(props) {
+export default function LexicalEditor({ onChange }) {
     const initialConfig = {
         namespace: 'MyEditor',
         theme,
@@ -169,13 +169,21 @@ export default function LexicalEditor(props) {
                 {/* <TabIndentationPlugin />  */}
 
                 <OnChangePlugin 
+                    // onChange={(editorState) => {
+                    //     editorState.read(() => {
+                    //         const json = editorState.toJSON();
+                    //         if (props.onChange) {
+                    //             props.onChange(json); // kirim balik ke parent
+                    //         }
+                    //     });
+                    // }}
+
                     onChange={(editorState) => {
-                        editorState.read(() => {
+                        if (onChange) {
                             const json = editorState.toJSON();
-                            if (props.onChange) {
-                                props.onChange(json); // kirim balik ke parent
-                            }
-                        });
+                            onChange(JSON.stringify(json));
+                            // onChange(JSON.stringify(editorState));
+                        }
                     }}
                 />
                 {/* <OnChangePlugin onChange={(editorState) => {
