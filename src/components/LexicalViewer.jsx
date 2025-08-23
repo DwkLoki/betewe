@@ -53,7 +53,10 @@ export default function LexicalViewer({ content }) {
     return (
         <LexicalComposer initialConfig={initialConfig}>
             <RichTextPlugin
-                contentEditable={<ContentEditable className="prose max-w-none" />}
+                contentEditable={
+                    <ContentEditable className="prose max-w-none" />
+                    // <ContentEditable className="prose max-w-none [&_img]:max-w-full [&_img]:h-auto" />
+                }
                 placeholder={null}
                 ErrorBoundary={LexicalErrorBoundary}
             />

@@ -391,14 +391,15 @@ export default function QuestionDetails() {
                         </div>
 
                         {/* bagian pertanyaan */}
-                        <div className='flex-1 space-y-4'>
+                        <div className='flex-1 space-y-4 overflow-x-hidden'>
                             <p className='lg:text-2xl md:text-xl text-lg font-bold text-[#2C448C]'>
                                 {questionDetail.title}
                             </p>
 
                             {/* <p>{questionDetail.content}</p> */}
-                            {parsedContent && <LexicalViewer content={parsedContent} />}
-                            {/* <LexicalViewer content={JSON.parse(questionDetail.content)} /> */}
+                            <div className='w-full overflow-x-auto'>
+                                {parsedContent && <LexicalViewer content={parsedContent} />}
+                            </div>
 
                             <div className='flex gap-4'>
                                 <div className='flex-1'>

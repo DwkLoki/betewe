@@ -105,7 +105,7 @@ export default function Dashboard() {
         };
     }, [isSidebarOpen]);
 
-    console.log('data user', user);
+    // console.log('data user', user);
 
     return (
         <section className="h-screen overflow-hidden">

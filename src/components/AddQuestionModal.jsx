@@ -14,14 +14,14 @@ export default function AddQuestionModal(props) {
         categoryQuery: '',
         // categories: []
     })
-    console.log('Data form:', formData);
+    console.log('Data form dari AddQuestionModal:', formData);
     // const [query, setQuery] = useState('')
     const [selectedTags, setSelectedTags] = useState([])
     const [filteredTags, setFilteredTags] = useState([])
     const [isLoading, setIsLoading] = useState(false)
 
     const isTitleEmpty = formData.title.trim() === '';
-    const isContentEmpty = formData.content.trim() === '';
+    // const isContentEmpty = formData.content.trim() === '';
     const isSelectedTagsEmpty = selectedTags.length === 0;
 
     const handleInputChange = (e) => {
@@ -66,7 +66,7 @@ export default function AddQuestionModal(props) {
         const token = localStorage.getItem('TOKEN')
         const question = {
             title: formData.title,
-            content: formData.content,
+            content: JSON.stringify(formData.content),
             category_ids: selectedTags.map(tag => tag.id) // convert ['ekonomi', 'bisnis'] => [7, 5]
         }
         const config = {
@@ -169,7 +169,7 @@ export default function AddQuestionModal(props) {
                                     <LexicalEditor onChange={(json) => {
                                             setFormData((prev) => ({
                                                 ...prev,
-                                                content: JSON.stringify(json), // simpan sebagai string JSON
+                                                content: json,
                                             }));
                                         }} 
                                     />
@@ -241,10 +241,10 @@ export default function AddQuestionModal(props) {
                                 <button
                                     type='button'
                                     onClick={handleSubmit}
-                                    disabled={isLoading || isTitleEmpty || isContentEmpty || isSelectedTagsEmpty}
+                                    disabled={isLoading || isTitleEmpty || isSelectedTagsEmpty}
                                     className={`
                                         flex justify-center items-center space-x-4 sm:px-4 px-3 py-2 rounded-[15px] font-bold text-white bg-[#2C448C]
-                                        ${!isTitleEmpty && !isContentEmpty && !isSelectedTagsEmpty ? isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]' : 'bg-[#BCBCBC] cursor-not-allowed'}
+                                        ${!isTitleEmpty && !isSelectedTagsEmpty ? isLoading ? 'bg-[#2C448C] opacity-50 cursor-not-allowed' : 'bg-[#2C448C]' : 'bg-[#BCBCBC] cursor-not-allowed'}
                                     `}
                                 >
                                     <ClipLoader
